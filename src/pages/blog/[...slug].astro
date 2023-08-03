@@ -6,6 +6,9 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 import { ContentContainer } from "../../components/ContentContainer";
 import DefaultLayout from "../../layouts/DefaultLayout.astro";
 import { SectionHeader } from "../../components/SectionHeader";
+import clsx from "clsx";
+// MD components
+import Pre from "../../components/blog/Pre.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -30,8 +33,13 @@ const { Content, ...rest } = await post.render();
     >
       {post.data.title}
     </SectionHeader>
-    <div class="max-w-prose mx-auto">
-      <Content />
+    <div
+      class={clsx(
+        "max-w-none mx-auto prose dark:prose-invert",
+        "prose-code:before:hidden prose-code:after:hidden prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:bg-gray-100 dark:prose-code:bg-gray-700",
+      )}
+    >
+      <Content components={{ pre: Pre }} />
     </div>
   </ContentContainer>
 </DefaultLayout>

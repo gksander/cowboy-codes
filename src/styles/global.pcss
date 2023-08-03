@@ -1,0 +1,92 @@
+@tailwind utilities;
+
+html {
+  font-size: 18px;
+  font-family: "Montserrat", sans-serif;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  @apply overflow-x-hidden;
+}
+
+.font-fancy {
+  font-family: "Sansita Swashed", cursive;
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-800 via-secondary-400 to-primary-600 bg-clip-text text-transparent
+            dark:from-primary-200 dark:via-secondary-500 dark:to-primary-400;
+  }
+  .bg-primary-gradient {
+    @apply bg-gradient-to-tr from-primary-800 via-secondary-500 to-primary-600;
+  }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+img#headshot {
+  mask-image: linear-gradient(to bottom, black 50%, transparent);
+}
+
+pre.shiki {
+  --shiki-color-text: theme("colors.primary.800");
+  --shiki-color-background: theme("colors.transparent");
+  --shiki-token-constant: theme("colors.primary.700");
+  --shiki-token-string: #770000;
+  --shiki-token-comment: theme("colors.gray.500");
+  --shiki-token-keyword: theme("colors.secondary.900");
+  --shiki-token-parameter: theme("colors.red.500");
+  --shiki-token-function: theme("colors.primary.600");
+  --shiki-token-string-expression: theme("colors.secondary.800");
+  --shiki-token-punctuation: theme("colors.gray.700");
+  --shiki-token-link: #ee0000;
+
+  @apply relative py-0 leading-tight p-4 rounded bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-black;
+  font-family: "JetBrains Mono Variable", monospace;
+
+  .language-id {
+    @apply absolute bottom-2 right-2 leading-none text-primary-700 dark:text-primary-400;
+  }
+
+  /* For twoslash popovers */
+
+  .meta-line {
+    @apply overflow-hidden;
+
+    .popover {
+      @apply py-1 px-3 relative inline-block rounded bg-gray-300 dark:bg-gray-600 text-primary-700 dark:text-primary-300 bg-opacity-70 mt-3 mb-1;
+      @apply flex-shrink overflow-ellipsis text-sm;
+    }
+    .popover::before {
+      content: "";
+      @apply block absolute w-0 h-0 border-l-8 border-b-[10px] border-r-8 border-transparent border-b-gray-300 dark:border-b-gray-600 -top-2;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  pre.shiki {
+    --shiki-color-text: theme("colors.primary.300");
+    --shiki-color-background: theme("colors.transparent");
+    --shiki-token-constant: theme("colors.primary.400");
+    --shiki-token-string: #770000;
+    --shiki-token-comment: theme("colors.gray.300");
+    --shiki-token-keyword: theme("colors.amber.300");
+    --shiki-token-parameter: theme("colors.red.500");
+    --shiki-token-function: theme("colors.primary.300");
+    --shiki-token-string-expression: theme("colors.secondary.300");
+    --shiki-token-punctuation: theme("colors.gray.300");
+    --shiki-token-link: #ee0000;
+  }
+}

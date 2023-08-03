@@ -1,0 +1,9 @@
+---
+const attrs = Astro.props;
+---
+
+<div class="not-prose">
+  <pre class={attrs.class} style={attrs.style}>
+    <slot />
+  </pre>
+</div>

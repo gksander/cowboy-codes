@@ -31,5 +31,5 @@ module.exports = {
       center: true,
     },
   },
-  plugins: [require("@tailwindcss/line-clamp")],
+  plugins: [require("@tailwindcss/typography")],
 };
