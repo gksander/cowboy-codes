@@ -50,8 +50,8 @@ export const CarouselItem = (
   },
 ) => {
   const titleClass = clsx(
-    "font-bold text-gray-800 self-start overflow-x-hidden whitespace-nowrap text-ellipsis max-w-full",
-    item.isPrimary && "text-gradient",
+    "font-bold self-start overflow-x-hidden whitespace-nowrap text-ellipsis max-w-full",
+    item.isPrimary ? "text-gradient" : "text-gray-800",
     item.href && "hover:text-primary-700 transition-colors duration-150",
   );
 

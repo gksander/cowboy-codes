@@ -16,13 +16,13 @@ html, body {
 
 
 
+
 @layer utilities {
     .text-gradient {
-        @apply bg-gradient-to-r from-primary-800 via-purple-500 to-primary-600 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-primary-800 via-secondary-400 to-primary-600 bg-clip-text text-transparent;
     }
-
     .bg-primary-gradient {
-        @apply bg-gradient-to-tr from-primary-700 via-purple-400 to-primary-500;
+        @apply bg-gradient-to-tr from-primary-400 via-secondary-100 to-primary-200;
     }
 }
 

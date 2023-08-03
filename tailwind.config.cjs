@@ -8,7 +8,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: colors.indigo,
+        primary: colors.cyan,
+        secondary: colors.blue,
       },
 
       // Add a `breakout` class for the Experience scroll section, so we can breakout of container.
@@ -25,15 +26,6 @@ module.exports = {
           }, {}),
         };
       },
-
-      backgroundImage: ({ theme }) => ({
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        hero: `radial-gradient(circle at bottom center, ${theme(
-          "colors.primary.500",
-        )}, ${theme("colors.primary.300")}80 20%, ${theme(
-          "colors.primary.300",
-        )}00 100%)`,
-      }),
     },
     container: {
       center: true,

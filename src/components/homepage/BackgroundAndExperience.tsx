@@ -34,7 +34,7 @@ export function BackgroundAndExperience({
         Experience
       </SubsectionHeader>
       <Carousel
-        items={expItems.map((exp) => ({
+        items={expItems.map((exp, i) => ({
           title: exp.title,
           description: exp.description,
           image: exp.logo,

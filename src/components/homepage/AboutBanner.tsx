@@ -3,7 +3,7 @@ import { ContentContainer } from "../ContentContainer";
 export function AboutBanner() {
   return (
     <div className="text-gray-700 relative -mt-16">
-      <div className="absolute inset-x-0 h-[800px] -top-[400px] bg-gradient-to-b from-white via-primary-100 to-white z-[-1]" />
+      <div className="absolute inset-x-0 h-[800px] -top-[400px] bg-gradient-to-b from-white via-secondary-50 to-white z-[-1]" />
       <ContentContainer class="px-5 py-8 flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-12 justify-center">
         {SECTIONS.map((section) => (
           <div

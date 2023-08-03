@@ -32,7 +32,7 @@ export const YoutubeEmbed = ({ id }: YoutubeEmbedProps) => {
           onClick={() => setIsActivated(true)}
           aria-label="Play video"
         >
-          <FaPlayCircle class="w-10 h-10 text-gray-800 group-hover:text-primary-700 transition transition-colors duration-150" />
+          <FaPlayCircle class="w-10 h-10 text-gray-800 group-hover:text-secondary-500 transition-colors duration-150" />
         </button>
       )}
     </article>
