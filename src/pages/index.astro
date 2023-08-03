@@ -1,6 +1,6 @@
 ---
 import DefaultLayout from "../layouts/DefaultLayout.astro";
-import _portrait from "../assets/portrait-1.png";
+import _portrait from "../assets/grant3.png";
 import { getOptimizedImageSrc } from "../utils/getOptimizedImageSrc";
 import { ContentContainer } from "../components/ContentContainer";
 import { OptimizedImage } from "../components/OptimizedImage";
@@ -29,7 +29,7 @@ import GifMaker from "../assets/gif-maker.png";
 
 const portrait = await getOptimizedImageSrc({
   src: _portrait,
-  width: 450,
+  width: 600,
   loading: "eager",
   fetchPriority: "high",
 });
@@ -212,7 +212,7 @@ const projects: Project[] = await Promise.all(
     <OptimizedImage
       image={portrait}
       alt="Headshot"
-      class="w-[450px] mx-auto aspect-[2992/2533]"
+      class="w-[350px] mx-auto"
       loading="eager"
       id="headshot"
     />

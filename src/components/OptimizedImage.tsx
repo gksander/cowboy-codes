@@ -13,6 +13,7 @@ export function OptimizedImage({
   id?: string;
   isHighPriority?: boolean;
 }) {
+  console.log(image.attributes);
   return (
     <picture>
       <source type="image/avif" srcset={image.src[0]} />
@@ -21,6 +22,9 @@ export function OptimizedImage({
         src={image.src[2]}
         alt={alt}
         class={className}
+        style={{
+          aspectRatio: `${image.attributes.width} / ${image.attributes.height}`,
+        }}
         {...image.attributes}
         id={id}
         // @ts-ignore
