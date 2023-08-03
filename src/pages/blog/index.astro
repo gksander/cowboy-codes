@@ -1,15 +1,68 @@
 ---
 import { getCollection } from "astro:content";
+import format from "date-fns/format";
 import { ContentContainer } from "../../components/ContentContainer";
 import DefaultLayout from "../../layouts/DefaultLayout.astro";
+import { SubsectionHeader } from "../../components/SubsectionHeader";
+import { Carousel } from "../../components/Carousel";
+import { Image } from "astro:assets";
+import banner from "../../assets/writing.jpg";
+import { BlogPostListItem } from "../../components/blog/BlogPostListItem";
+import { CarouselItem } from "../../components/Carousel";
+
+const externalPosts = (await getCollection("externalPost"))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .map((el) => el.data);
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
 );
 ---
 
-<DefaultLayout title="Blog">
-  <ContentContainer>
-    <div>Under construction...</div>
+<DefaultLayout title="Grant Sander Blog">
+  <div
+    class="bg-gradient-to-b from-[rgba(255,255,255,100%)] from-10% to-[rgba(255,255,255,0%)]"
+  >
+    <Image
+      src={banner}
+      alt="Banner"
+      class="h-48 w-full object-cover mix-blend-plus-lighter"
+      loading="eager"
+      priority={true}
+    />
+  </div>
+
+  <ContentContainer class="py-12">
+    <SubsectionHeader subtitle="From places elsewhere." className="mb-8">
+      External Blog Posts
+    </SubsectionHeader>
+    <Carousel
+      items={externalPosts.map((post) => ({
+        title: post.title,
+        description: post.description,
+        href: post.href,
+        date: post.pubDate,
+        subtitle: post.platform,
+        subsubtitle: format(post.pubDate, "MMMM yyyy"),
+      }))}
+      itemClassname="w-5/6 sm:w-[calc(50%-0.75rem)]"
+      shouldClipText={true}
+      className="mb-24"
+    />
+
+    <SubsectionHeader className="mb-8" subtitle="Posts on my own behalf.">
+      Personal Blog Posts
+    </SubsectionHeader>
+    {
+      posts.map((post) => (
+        <CarouselItem
+          title={post.data.title}
+          description={post.data.description}
+          subsubtitle={format(post.data.pubDate, "MMMM d, yyyy")}
+          href={`/blog/${post.slug}`}
+          isInternalLink={true}
+        />
+      ))
+    }
   </ContentContainer>
 </DefaultLayout>

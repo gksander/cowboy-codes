@@ -13,7 +13,6 @@ export function OptimizedImage({
   id?: string;
   isHighPriority?: boolean;
 }) {
-  console.log(image.attributes);
   return (
     <picture>
       <source type="image/avif" srcset={image.src[0]} />

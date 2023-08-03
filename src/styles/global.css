@@ -39,3 +39,24 @@ html, body {
 img#headshot {
     mask-image: linear-gradient(to bottom, black 50%, transparent);
 }
+
+pre.shiki {
+    --shiki-color-text: #EEEEEE;
+    --shiki-color-background: theme("colors.gray.300");
+    --shiki-token-constant: #660000;
+    --shiki-token-string: #770000;
+    --shiki-token-comment: #880000;
+    --shiki-token-keyword: #990000;
+    --shiki-token-parameter: #AA0000;
+    --shiki-token-function: #BB0000;
+    --shiki-token-string-expression: #CC0000;
+    --shiki-token-punctuation: #DD0000;
+    --shiki-token-link: #EE0000;
+
+    @apply relative;
+    font-family: "JetBrains Mono Variable", monospace;
+
+    .language-id {
+        @apply absolute bottom-2 right-2 leading-none;
+    }
+}

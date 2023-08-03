@@ -1,8 +1,11 @@
 ---
+import "@fontsource-variable/jetbrains-mono";
 import { CollectionEntry, getCollection } from "astro:content";
+import format from "date-fns/format";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import { ContentContainer } from "../../components/ContentContainer";
 import DefaultLayout from "../../layouts/DefaultLayout.astro";
+import { SectionHeader } from "../../components/SectionHeader";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -14,11 +17,21 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content, ...rest } = await post.render();
 ---
 
 <DefaultLayout title="Blog Post">
-  <ContentContainer>
-    <Content />
+  <ContentContainer class="py-12">
+    <SectionHeader
+      subtitle={format(post.data.pubDate, "MMMM d, yyyy")}
+      align="left"
+      className="mb-12"
+      hasGradientTitle={true}
+    >
+      {post.data.title}
+    </SectionHeader>
+    <div class="max-w-prose mx-auto">
+      <Content />
+    </div>
   </ContentContainer>
 </DefaultLayout>

@@ -9,6 +9,6 @@ export function ContentContainer({
   children: ComponentChildren;
 }) {
   return (
-    <div class={clsx("container px-4 max-w-4xl", className)}>{children}</div>
+    <div class={clsx("container px-4 max-w-3xl", className)}>{children}</div>
   );
 }

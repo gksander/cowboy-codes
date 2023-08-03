@@ -47,6 +47,7 @@ export const CarouselItem = (
     isPrimary?: boolean;
     className?: string;
     shouldClipText?: boolean;
+    isInternalLink?: boolean;
   },
 ) => {
   const titleClass = clsx(
@@ -66,8 +67,8 @@ export const CarouselItem = (
         {item.href ? (
           <a
             href={item.href}
-            target="_blank"
-            rel="noreferrer"
+            target={!item.isInternalLink ? "_blank" : undefined}
+            rel={!item.isInternalLink ? "noopener noreferrer" : undefined}
             className={titleClass}
           >
             {item.title}
