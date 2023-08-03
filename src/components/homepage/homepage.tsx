@@ -5,8 +5,19 @@ import { AboutBanner } from "./AboutBanner";
 import { BackgroundAndExperience } from "./BackgroundAndExperience";
 import { Projects } from "./Projects";
 import type { ComponentChildren } from "preact";
+import { getImage } from "astro:assets";
+import type { OptimizedImageDetails } from "../../utils/getOptimizedImageSrc";
+import { OptimizedImage } from "../OptimizedImage";
 
-export function Homepage({ children }: { children: ComponentChildren }) {
+export function Homepage({
+  children,
+  portrait,
+}: {
+  portrait: OptimizedImageDetails;
+  children: ComponentChildren;
+}) {
+  // const deets = getImage(portrait);
+
   return (
     <>
       <Header>
@@ -21,14 +32,11 @@ export function Homepage({ children }: { children: ComponentChildren }) {
             </span>
           </h1>
 
-          <img
-            src={portrait.src}
-            alt="headshot"
-            class="w-[450px] mx-auto aspect-[2992/2533]"
-            width="450px"
+          <OptimizedImage
+            image={portrait}
+            alt="Headshot"
+            class="w-[450px] mx-auto aspect-[2992/2533] "
             loading="eager"
-            // @ts-ignore
-            fetchPriority={true}
             id="headshot"
           />
         </ContentContainer>

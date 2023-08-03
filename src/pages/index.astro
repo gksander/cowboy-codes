@@ -1,11 +1,12 @@
 ---
 import DefaultLayout from "../layouts/DefaultLayout.astro";
+import _portrait from "../assets/portrait-1.png";
 import { Homepage } from "../components/homepage/homepage";
-import {Content} from "../components/homepage/Content";
+import { getOptimizedImageSrc } from "../utils/getOptimizedImageSrc";
+
+const portrait = await getOptimizedImageSrc({ src: _portrait, width: 450 });
 ---
 
 <DefaultLayout>
-	<Homepage>
-		<Content client:visible />
-	</Homepage>
+  <Homepage portrait={portrait} />
 </DefaultLayout>

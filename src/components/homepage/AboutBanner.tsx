@@ -31,7 +31,7 @@ const SECTIONS: { title: string; body: string }[] = [
     body: `With a background in education and technical communication, a passion for people, and the technical sophistication to guide projects – I'm your guy when it comes to leading engineering teams.`,
   },
   {
-    title: "Lifelong learner",
+    title: "Curious cat",
     body: `Learning is one of my favorite past times, followed closely by teaching others. You'll catch me learning new things on the daily and walking head first into horizon expansion.`,
   },
 ];

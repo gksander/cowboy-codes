@@ -7,8 +7,10 @@ export function Header({ children }: { children?: ComponentChildren }) {
   return (
     <div class="isolate">
       <ContentContainer class="flex justify-between p-5 text-gray-700">
-        <div class="inline-block font-bold text-lg text-gradient">gksander</div>
-        <div class="flex gap-4">
+        <a href="/" class="inline-block font-bold text-lg text-gradient">
+          gksander
+        </a>
+        <div class="flex gap-4 items-center">
           {SOCIAL_LINKS.map((link) => (
             <a
               href={link.href}
@@ -21,6 +23,12 @@ export function Header({ children }: { children?: ComponentChildren }) {
               <link.icon className="w-7 h-7" />
             </a>
           ))}
+          <a
+            href="/blog"
+            class="border-2 rounded border-primary-800 px-4 py-1 text-primary-800"
+          >
+            Blog
+          </a>
         </div>
       </ContentContainer>
       {children}
