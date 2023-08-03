@@ -1,11 +1,25 @@
 ---
-import "../styles/global.css"
-import "@fontsource-variable/montserrat"
+import "@fontsource-variable/montserrat";
+import BaseHead from "../components/BaseHead.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  // image?: string;
+}
+
+const {
+  title = "Grant Sander",
+  description = "Grant Sander's personal site.",
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
-<body>
-<slot />
-</body>
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
