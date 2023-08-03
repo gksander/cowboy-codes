@@ -73,6 +73,32 @@ pre.shiki {
       @apply block absolute w-0 h-0 border-l-8 border-b-[10px] border-r-8 border-transparent border-b-gray-300 dark:border-b-gray-600 -top-2;
     }
   }
+
+  /* For twoslash errors */
+
+  & data-err {
+    @apply underline decoration-wavy decoration-red-400 dark:decoration-red-600;
+  }
+
+  .error {
+    @apply flex w-full items-center gap-2 border-t-4 border-red-400 dark:border-red-600 rounded-sm mt-2 mb-1 p-3 bg-gray-200 dark:bg-gray-800 text-sm;
+
+    > span:first-child {
+      @apply flex-1;
+    }
+
+    > .code {
+      &::before {
+        content: "ts(";
+      }
+      &::after {
+        content: ")";
+      }
+    }
+  }
+  .error-behind {
+    @apply hidden;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

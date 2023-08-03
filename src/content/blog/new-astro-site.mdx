@@ -21,10 +21,13 @@ My new site, who dis. **What's up i'm bold** and _i'm italic_. Lorem ipsum dolor
 Well here's some code, suppose `my_variable` is some number.
 
 ```ts twoslash
+// @errors: 2339
 const double = (x: number) => x + x;
 
 const myDoubledNumber = double(3);
 //    ^?
+
+"hello".contains(" ");
 
 // Shits and giggles
 console.log(myDoubledNumber, "Hello world");
