@@ -12,7 +12,7 @@ export function Header() {
         <div class="flex gap-4 items-center">
           <a
             href="/blog"
-            className="bg-gray-50 font-medium rounded border-primary-800 px-4 py-1 relative overflow-hidden before:bg-primary-gradient before:opacity-0 before:absolute before:inset-0 before:z-[-1] transition-all duration-150 hover:before:opacity-100 hover:bg-opacity-0"
+            className="bg-gray-50 font-medium rounded border-primary-800 px-4 py-1 relative overflow-hidden before:bg-primary-gradient before:opacity-0 before:absolute before:inset-0 before:z-[-1] transition-all duration-150 hover:before:opacity-100 hover:bg-opacity-0 hover:text-white"
           >
             Blog
           </a>

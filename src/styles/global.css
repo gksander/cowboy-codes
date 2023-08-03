@@ -22,7 +22,7 @@ html, body {
         @apply bg-gradient-to-r from-primary-800 via-secondary-400 to-primary-600 bg-clip-text text-transparent;
     }
     .bg-primary-gradient {
-        @apply bg-gradient-to-tr from-primary-400 via-secondary-100 to-primary-200;
+        @apply bg-gradient-to-tr from-primary-800 via-secondary-400 to-primary-600;
     }
 }
 
