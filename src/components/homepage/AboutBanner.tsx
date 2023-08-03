@@ -2,15 +2,15 @@ import { ContentContainer } from "../ContentContainer";
 
 export function AboutBanner() {
   return (
-    <div className="text-gray-700 relative -mt-16">
-      <div className="absolute inset-x-0 h-[800px] -top-[400px] bg-gradient-to-b from-white via-secondary-100 to-white z-[-1]" />
+    <div className="text-gray-700 dark:text-gray-300 relative -mt-16">
+      <div className="absolute inset-x-0 h-[800px] -top-[400px] bg-gradient-to-b from-white dark:from-gray-800 via-secondary-100 dark:via-secondary-900 to-white dark:to-gray-800 z-[-1]" />
       <ContentContainer class="px-5 py-8 flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-12 justify-center">
         {SECTIONS.map((section) => (
           <div
             key={section.title}
             className="sm:w-half-8 text-left sm:text-center"
           >
-            <h2 className="text-xl font-bold mb-2 text-gray-800">
+            <h2 className="text-xl font-bold mb-2 text-gray-800 dark:text-gray-200">
               {section.title}
             </h2>
             <p className="leading-snug">{section.body}</p>

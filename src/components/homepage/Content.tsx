@@ -42,7 +42,7 @@ export function Content() {
                 <div className="aspect-video w-full relative rounded-lg overflow-hidden mb-3">
                   <YoutubeEmbed id={video.src} />
                 </div>
-                <div className="font-bold text-gray-800 group-hover:text-primary-700 transition transition-colors duration-150">
+                <div className="font-bold text-gray-800 dark:text-gray-200 group-hover:text-primary-700 dark:group-hover:text-primary-300 transition transition-colors duration-150">
                   {video.title}
                 </div>
               </div>

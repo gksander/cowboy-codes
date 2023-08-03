@@ -20,16 +20,18 @@ const posts = (await getCollection("blog")).sort(
 ---
 
 <DefaultLayout title="Grant Sander Blog">
-  <div
-    class="bg-gradient-to-b from-[rgba(255,255,255,100%)] from-10% to-[rgba(255,255,255,0%)]"
-  >
+  <div class="relative">
     <Image
       src={banner}
       alt="Banner"
-      class="h-48 w-full object-cover mix-blend-plus-lighter"
+      class="h-48 lg:h-64 w-full object-cover"
       loading="eager"
       priority={true}
     />
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-white dark:from-gray-800 to-transparent"
+    >
+    </div>
   </div>
 
   <ContentContainer class="py-12">

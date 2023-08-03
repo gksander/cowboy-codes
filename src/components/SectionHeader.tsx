@@ -24,12 +24,14 @@ export function SectionHeader({
       <h2
         className={clsx(
           "font-bold text-2xl sm:text-3xl mb-2",
-          hasGradientTitle ? "text-gradient" : null,
+          hasGradientTitle ? "text-gradient" : "dark:text-gray-200",
         )}
       >
         {children}
       </h2>
-      {subtitle && <p className="text-gray-700 text-lg">{subtitle}</p>}
+      {subtitle && (
+        <p className="text-gray-700 dark:text-gray-300 text-lg">{subtitle}</p>
+      )}
     </div>
   );
 }

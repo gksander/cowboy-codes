@@ -28,11 +28,11 @@ export const YoutubeEmbed = ({ id }: YoutubeEmbedProps) => {
         ></iframe>
       ) : (
         <button
-          className="absolute inset-0 flex justify-center items-center bg-gray-300 bg-opacity-80 backdrop-grayscale"
+          className="absolute inset-0 flex justify-center items-center bg-gray-300 bg-opacity-80 dark:bg-gray-600 dark:bg-opacity-80 backdrop-grayscale"
           onClick={() => setIsActivated(true)}
           aria-label="Play video"
         >
-          <FaPlayCircle class="w-10 h-10 text-gray-800 group-hover:text-secondary-500 transition-colors duration-150" />
+          <FaPlayCircle class="w-10 h-10 text-gray-800 dark:text-gray-300 group-hover:text-secondary-500 dark:group-hover:text-secondary-300 transition-colors duration-150" />
         </button>
       )}
     </article>

@@ -25,7 +25,7 @@ export function Projects({ projects }: { projects: Project[] }) {
                   class={clsx(
                     "w-full aspect-video",
                     project.imageFit === "contain"
-                      ? "object-contain bg-gray-300"
+                      ? "object-contain bg-gray-300 dark:bg-gray-600"
                       : "object-cover",
                   )}
                 />
@@ -36,7 +36,7 @@ export function Projects({ projects }: { projects: Project[] }) {
             )}
 
             <a
-              className="font-bold text-lg text-gray-800 group/link flex gap-2 items-center hover:text-primary-700 transition-colors duration-150 mb-1"
+              className="font-bold text-lg text-gray-800 dark:text-gray-200 group/link flex gap-2 items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-150 mb-1"
               href={project.repoUrl}
               target="_blank"
               rel="noreferrer"
@@ -44,14 +44,14 @@ export function Projects({ projects }: { projects: Project[] }) {
               <span>{project.title}</span>
               <FaGithub className="w-5 h-5 opacity-0 group-hover/link:opacity-100 transition-all duration-200 -translate-x-2 group-hover:translate-x-0 scale-75 group-hover:scale-100" />
             </a>
-            <p className="text-sm text-gray-800">
+            <p className="text-sm text-gray-800 dark:text-gray-200">
               {project.description}{" "}
               {project.link && (
                 <a
                   href={project.link.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-bold text-gray-700 hover:text-primary-800 transition-colors duration-150"
+                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-300 transition-colors duration-150"
                 >
                   {project.link.title}.
                 </a>

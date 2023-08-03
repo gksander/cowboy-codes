@@ -37,7 +37,7 @@ export const Carousel = ({
         ))}
         <div className="w-[calc(16.6667%-1.5rem)] sm:w-[calc(50%-1.5rem)] flex-shrink-0" />
       </div>
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-transparent to-[rgba(255,255,255,0.7)]"></div>
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-transparent to-[rgba(255,255,255,0.7)] dark:to-gray-800"></div>
     </div>
   );
 };
@@ -52,8 +52,9 @@ export const CarouselItem = (
 ) => {
   const titleClass = clsx(
     "font-bold self-start overflow-x-hidden whitespace-nowrap text-ellipsis max-w-full",
-    item.isPrimary ? "text-gradient" : "text-gray-800",
-    item.href && "hover:text-primary-700 transition-colors duration-150",
+    item.isPrimary ? "text-gradient" : "text-gray-800 dark:text-gray-200",
+    item.href &&
+      "hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-150",
   );
 
   return (
@@ -78,7 +79,7 @@ export const CarouselItem = (
         )}
         <p
           className={clsx(
-            "flex-grow text-gray-800 text-sm",
+            "flex-grow text-gray-800 dark:text-gray-300 text-sm",
             item.shouldClipText && "line-clamp-4",
           )}
         >
@@ -86,10 +87,12 @@ export const CarouselItem = (
         </p>
       </div>
       <div>
-        <div className="font-bold text-sm text-gray-700">{item.subtitle}</div>
+        <div className="font-bold text-sm text-gray-700 dark:text-gray-300">
+          {item.subtitle}
+        </div>
         {item.subsubtitle && (
           <div
-            className="text-xs"
+            className="text-xs dark:text-gray-400"
             dangerouslySetInnerHTML={{ __html: item.subsubtitle }}
           ></div>
         )}
