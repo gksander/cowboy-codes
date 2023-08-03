@@ -4,14 +4,14 @@ export function OptimizedImage({
   image,
   alt,
   class: className,
-  loading = "lazy",
   id,
+  isHighPriority,
 }: {
   image: OptimizedImageDetails;
   alt: string;
   class?: string;
-  loading?: "eager" | "lazy";
   id?: string;
+  isHighPriority?: boolean;
 }) {
   return (
     <picture>
@@ -20,10 +20,10 @@ export function OptimizedImage({
       <img
         src={image.src[2]}
         alt={alt}
-        loading={loading}
         class={className}
         {...image.attributes}
         id={id}
+        // @ts-ignore
       />
     </picture>
   );

@@ -27,7 +27,12 @@ import Zephyr from "../assets/zephyr.png";
 import Pokedex from "../assets/pokedex.png";
 import GifMaker from "../assets/gif-maker.png";
 
-const portrait = await getOptimizedImageSrc({ src: _portrait, width: 450 });
+const portrait = await getOptimizedImageSrc({
+  src: _portrait,
+  width: 450,
+  loading: "eager",
+  fetchPriority: "high",
+});
 
 const experiences = await Promise.all(
   (
