@@ -189,7 +189,6 @@ const projects: Project[] = await Promise.all(
       ? await getOptimizedImageSrc({
           src: item.image,
           width: 600,
-          quality: "high",
         })
       : undefined,
   })),
