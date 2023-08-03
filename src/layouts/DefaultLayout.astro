@@ -1,6 +1,8 @@
 ---
 import "@fontsource-variable/montserrat";
 import BaseHead from "../components/BaseHead.astro";
+import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 
 interface Props {
   title: string;
@@ -19,7 +21,11 @@ const {
   <head>
     <BaseHead title={title} description={description} />
   </head>
-  <body>
-    <slot />
+  <body class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-grow">
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>

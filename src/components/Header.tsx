@@ -1,16 +1,21 @@
 import { ContentContainer } from "./ContentContainer";
 import { FaGithub } from "./icons/FaGithub";
 import { FaLinkedIn } from "./icons/FaLinkedIn";
-import type { ComponentChildren } from "preact";
 
-export function Header({ children }: { children?: ComponentChildren }) {
+export function Header() {
   return (
-    <div class="isolate">
+    <nav>
       <ContentContainer class="flex justify-between p-5 text-gray-700">
         <a href="/" class="inline-block font-bold text-lg text-gradient">
           gksander
         </a>
         <div class="flex gap-4 items-center">
+          <a
+            href="/blog"
+            className="bg-gray-50 font-medium rounded border-primary-800 px-4 py-1 relative overflow-hidden before:bg-primary-gradient before:opacity-0 before:absolute before:inset-0 before:z-[-1] transition-all duration-150 hover:before:opacity-100 hover:bg-opacity-0 hover:text-white"
+          >
+            Blog
+          </a>
           {SOCIAL_LINKS.map((link) => (
             <a
               href={link.href}
@@ -23,16 +28,9 @@ export function Header({ children }: { children?: ComponentChildren }) {
               <link.icon className="w-7 h-7" />
             </a>
           ))}
-          <a
-            href="/blog"
-            class="border-2 rounded border-primary-800 px-4 py-1 text-primary-800"
-          >
-            Blog
-          </a>
         </div>
       </ContentContainer>
-      {children}
-    </div>
+    </nav>
   );
 }
 

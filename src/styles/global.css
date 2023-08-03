@@ -1,3 +1,5 @@
+@tailwind utilities;
+
 html {
     font-size: 18px;
     font-family: "Montserrat", sans-serif;
@@ -12,8 +14,16 @@ html, body {
     font-family: "Sansita Swashed", cursive;
 }
 
-.text-gradient {
-    @apply bg-gradient-to-r from-primary-800 via-purple-500 to-primary-600 bg-clip-text text-transparent;
+
+
+@layer utilities {
+    .text-gradient {
+        @apply bg-gradient-to-r from-primary-800 via-purple-500 to-primary-600 bg-clip-text text-transparent;
+    }
+
+    .bg-primary-gradient {
+        @apply bg-gradient-to-tr from-primary-700 via-purple-400 to-primary-500;
+    }
 }
 
 .scrollbar-hide::-webkit-scrollbar {

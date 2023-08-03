@@ -1,21 +1,15 @@
 ---
-import {SITE_TITLE, SITE_DESCRIPTION} from '../../consts';
-import {getCollection} from 'astro:content';
-import BlogLayout from "../../layouts/BlogLayout.astro";
+import { getCollection } from "astro:content";
 import { ContentContainer } from "../../components/ContentContainer";
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
-const posts = (await getCollection('blog')).sort(
-    (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+const posts = (await getCollection("blog")).sort(
+  (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
 );
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<BlogLayout>
-    <ContentContainer>
-        <div>
-            Under construction...
-        </div>
-    </ContentContainer>
-</BlogLayout>
-</html>
+<DefaultLayout title="Blog">
+  <ContentContainer>
+    <div>Under construction...</div>
+  </ContentContainer>
+</DefaultLayout>
