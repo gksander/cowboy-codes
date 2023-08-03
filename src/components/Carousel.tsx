@@ -1,4 +1,6 @@
 import clsx from "clsx";
+import type { OptimizedImageDetails } from "../utils/getOptimizedImageSrc";
+import { OptimizedImage } from "./OptimizedImage";
 
 type Props = {
   items: {
@@ -6,7 +8,7 @@ type Props = {
     description: string;
     subtitle: string;
     subsubtitle?: string;
-    image?: ImageMetadata;
+    image?: OptimizedImageDetails;
     href?: string;
   }[];
   emphasizeFirstItem?: boolean;
@@ -92,10 +94,10 @@ export const CarouselItem = (
         )}
       </div>
       {item.image && (
-        <img
+        <OptimizedImage
+          image={item.image}
           alt=""
-          src={item.image.src}
-          className="absolute bottom-3 w-16 h-16 right-3 object-contain z-[-1] opacity-30 group-hover:opacity-50 grayscale group-hover:grayscale-0 transition-filters duration-300"
+          class="absolute bottom-3 w-16 h-16 right-3 object-contain z-[-1] opacity-30 group-hover:opacity-50 grayscale group-hover:grayscale-0 transition-filters duration-300"
         />
       )}
     </div>

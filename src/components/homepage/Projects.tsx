@@ -1,14 +1,10 @@
 import { SectionHeader } from "../SectionHeader";
-import Clips from "../../assets/clips.png";
-import Mandelbruh from "../../assets/mandelbruh.png";
-import Pokedex from "../../assets/pokedex.png";
-import Zephyr from "../../assets/zephyr.png";
-import GifMaker from "../../assets/gif-maker.png";
-import groqd from "../../assets/groqd-arcade.png";
 import clsx from "clsx";
 import { FaGithub } from "../icons/FaGithub";
+import type { OptimizedImageDetails } from "../../utils/getOptimizedImageSrc";
+import { OptimizedImage } from "../OptimizedImage";
 
-export function Projects() {
+export function Projects({ projects }: { projects: Project[] }) {
   return (
     <div className="py-16">
       <SectionHeader
@@ -23,10 +19,10 @@ export function Projects() {
           <div key={project.title} className="group/card">
             {project.image ? (
               <div className="relative rounded-lg mb-3 overflow-hidden">
-                <img
+                <OptimizedImage
+                  image={project.image}
                   alt={`${project.title} screenshot`}
-                  src={project.image.src}
-                  className={clsx(
+                  class={clsx(
                     "w-full aspect-video",
                     project.imageFit === "contain"
                       ? "object-contain bg-gray-300"
@@ -68,7 +64,7 @@ export function Projects() {
   );
 }
 
-type Project = {
+export type Project = {
   title: string;
   repoUrl?: string;
   description: string;
@@ -76,97 +72,6 @@ type Project = {
     href: string;
     title: string;
   };
-  image?: ImageMetadata;
+  image?: OptimizedImageDetails;
   imageFit?: "contain" | "cover";
 };
-
-const projects: Project[] = [
-  {
-    title: "Groqd",
-    repoUrl: "https://github.com/FormidableLabs/groqd/",
-    description: `A type and runtime safe query builder for the GROQ query language.`,
-    image: groqd,
-    // imageFit: "contain",
-    link: {
-      href: "https://formidable.com/open-source/groqd/",
-      title: "Check it out",
-    },
-  },
-  {
-    title: "Clips",
-    repoUrl: "https://github.com/FormidableLabs/clips",
-    description: `A screen recording app built with web technologies.`,
-    link: {
-      href: "https://clips.formidable.dev/",
-      title: "Check it out",
-    },
-    image: Clips,
-  },
-  {
-    title: "Mandelbruh",
-    repoUrl: "https://github.com/gksander/mandelbruh",
-    description: `A mandelbrot fractal generator built with raw WebGL and Svelte.`,
-    link: {
-      href: "https://www.mandelbruh.dev/",
-      title: "Check it out",
-    },
-    image: Mandelbruh,
-  },
-  {
-    title: "React Native Zephyr",
-    repoUrl: "https://github.com/FormidableLabs/react-native-zephyr",
-    description: `TailwindCSS-inspired styling library for React Native.`,
-    link: {
-      href: "https://formidable.com/open-source/react-native-zephyr/",
-      title: "View the docs",
-    },
-    image: Zephyr,
-  },
-  {
-    title: "Personal PokeDex",
-    repoUrl: "https://github.com/gksander/gks-pokedex-next",
-    description: `Pokedex site built with Next.js static site generation powered by PokeAPI CSV data.`,
-    link: {
-      href: "https://pokedex.gksander.com/",
-      title: "Check it out",
-    },
-    image: Pokedex,
-  },
-  {
-    title: "GifMaker",
-    repoUrl: "https://github.com/gksander/gif-maker",
-    description: `Browser-based FFMPEG video converter. Handy for turning .mov files into GIFs.`,
-    link: {
-      href: "https://gif-maker.gksander.com/",
-      title: "Check it out",
-    },
-    image: GifMaker,
-  },
-  // {
-  //   title: "React Dynamic Geometry",
-  //   repoUrl: "https://github.com/gksander/react-dynamic-geometry",
-  //   description: `A React library for creating dynamic geometry boards. This was a "could I do that?" project, and was more for fun than for real-world use. Uses React, TypeScript, Jotai, and MATH.`,
-  //   link: {
-  //     href: "https://github.com/gksander/react-dynamic-geometry",
-  //     title: "View the source with some examples",
-  //   },
-  // },
-  // {
-  //   title: "CIE Color Converter",
-  //   repoUrl: "https://github.com/gksander/CIE-ColorConverter",
-  //   description: `A dependency-free JS library to convert between 7 different color spaces. Lots of fun matrix maths.`,
-  //   link: {
-  //     href: "https://github.com/gksander/CIE-ColorConverter",
-  //     title: "View the source",
-  //   },
-  // },
-  // {
-  //   title: `LearnJS Playground`,
-  //   repoUrl: "https://github.com/gksander/learnjs-gatsby",
-  //   description: `A pet project I started and never finished. Uses Gatsby and MDX to create static pages with JS-based learning exercises. Contains fun little interactive editors for tinkering with JS ideas.`,
-  //   link: {
-  //     href: "https://learnjs.gksander.com/",
-  //     title: "View the live site",
-  //   },
-  // },
-];
