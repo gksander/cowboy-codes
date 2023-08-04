@@ -1,6 +1,7 @@
 import path from "node:path";
 import colors from "../../../scripts/tw-colors.json";
-import { createCanvas, loadImage, registerFont } from "canvas";
+import pkg from "canvas";
+const { registerFont, createCanvas, loadImage } = pkg;
 import { format } from "date-fns";
 
 // Import all pages from the content directory
