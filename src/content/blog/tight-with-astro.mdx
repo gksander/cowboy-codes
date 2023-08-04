@@ -85,6 +85,16 @@ This is a neat way to make TypeScript code examples a bit more engaging. In fact
 
 I'm a huge TailwindCSS fan (for many reasons), and using it on a site like this is a real joy. Very easy to support dark mode, can use the `@apply` directive to style up Shiki code blocks (the syntax highlighting is driven by my TailwindCSS theme!), and [the typography plugin](https://tailwindcss.com/docs/typography-plugin) is effectively a drop-in for making prose _like this_ look great by just adding a few classes.
 
+### Dynamic Open Graph images
+
+Vercel has a [whole product](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation) around dynamically-generated Open Graph images. Which makes sense, because Open Graph images are critically important when sharing content across platforms – but they can be annoying to manually generate at scale.
+
+Using [`node-canvas`](https://github.com/Automattic/node-canvas), some drawing commands, and a dynamic Astro route, I was able to generate Open Graph images for my posts on the fly. Here's an example output:
+
+![Open Graph image for this post](@assets/posts/new-site/dynamic-og.png)
+
+These images are now generated based on the title and publication date for _all_ blog posts without future effort. Yay for automation!
+
 ## Try it yourself
 
 Astro is dead simple to get started with. Just run a:
