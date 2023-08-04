@@ -37,7 +37,7 @@ export async function get({ props }) {
  */
 
 registerFont(
-  path.resolve(process.cwd(), "src/pages/og/montserrat-latin-500-normal.ttf"),
+  path.resolve(process.cwd(), "src/assets/montserrat-latin-500-normal.ttf"),
   {
     family: "Montserrat Thin",
   },
