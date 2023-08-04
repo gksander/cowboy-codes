@@ -3,32 +3,39 @@ import colors from "../../../scripts/tw-colors.json";
 import pkg from "canvas";
 const { registerFont, createCanvas, loadImage } = pkg;
 import { format } from "date-fns";
+import type { CollectionEntry } from "astro:content";
+
+type BlogData = CollectionEntry<"blog">["data"];
 
 // Import all pages from the content directory
 const rawPages = import.meta.glob("/src/content/**/*.mdx", {
   eager: true,
 });
 
-// Remove the /src/content prefix from the paths
-const pages = Object.entries(rawPages).reduce(
-  (acc, [path, page]) => ({
-    ...acc,
-    [path.replace("/src/content", "")]: page,
-  }),
+// Remove the /src/content/ prefix from the paths
+const pages = Object.entries(rawPages).reduce<Record<string, BlogData>>(
+  (acc, [path, page]) => {
+    acc[path.replace("/src/content/", "")] = (
+      page as { frontmatter: BlogData }
+    ).frontmatter;
+    return acc;
+  },
   {},
 );
 
 export async function getStaticPaths() {
   return Object.entries(pages).map(([p, page]) => ({
     params: { route: p.replace(path.extname(p), "") + ".png" },
-    // @ts-ignore
-    props: page.frontmatter,
+    props: page,
   }));
 }
 
-export async function get({ props }) {
+export async function get({ props }: { props: BlogData }) {
   return {
-    body: await drawOGImage({ title: props.title, pubDate: props.pubDate }),
+    body: await drawOGImage({
+      title: props.title,
+      pubDate: new Date(props.pubDate),
+    }),
   };
 }
 
@@ -48,24 +55,24 @@ async function drawOGImage({
   pubDate,
 }: {
   title: string;
-  pubDate: string;
+  pubDate: Date;
 }) {
   const SC = 2;
-  const width = SC * 1200;
-  const height = SC * 627;
-  const padding = SC * 50;
+  const WIDTH = SC * 1200;
+  const HEIGHT = SC * 627;
+  const PADDING = SC * 50;
 
   // Instantiate the canvas object
-  const canvas = createCanvas(width, height);
+  const canvas = createCanvas(WIDTH, HEIGHT);
   const context = canvas.getContext("2d");
 
   // Background
   // Create gradient
-  const grd = context.createLinearGradient(0, 0, width, height);
+  const grd = context.createLinearGradient(0, 0, WIDTH, HEIGHT);
   grd.addColorStop(0.4, colors.gray["800"]);
   grd.addColorStop(1, colors.secondary["900"]);
   context.fillStyle = grd;
-  context.fillRect(0, 0, width, height);
+  context.fillRect(0, 0, WIDTH, HEIGHT);
 
   // Headshot
   const AR = 1958 / 2000; // height / width
@@ -73,8 +80,8 @@ async function drawOGImage({
   const IMG_HEIGHT = IMG_WIDTH * AR;
   context.drawImage(
     await loadImage(path.resolve(process.cwd(), "src/assets/headshot.png")),
-    width - IMG_WIDTH,
-    height - IMG_HEIGHT,
+    WIDTH - IMG_WIDTH,
+    HEIGHT - IMG_HEIGHT,
     IMG_WIDTH,
     IMG_HEIGHT,
   );
@@ -86,9 +93,9 @@ async function drawOGImage({
   context.textAlign = "left";
   context.textBaseline = "top";
   context.fillStyle = colors.white;
-  const lines = getLines(context, title, 0.85 * width);
+  const lines = getLines(context, title, 0.85 * WIDTH);
   lines.forEach((line, i) => {
-    context.fillText(line, padding, padding + i * lineHeight * titleFontSize);
+    context.fillText(line, PADDING, PADDING + i * lineHeight * titleFontSize);
   });
 
   // Publication date
@@ -96,11 +103,7 @@ async function drawOGImage({
   context.textAlign = "left";
   context.textBaseline = "bottom";
   context.fillStyle = colors.gray["300"];
-  context.fillText(
-    format(new Date(pubDate), "MMMM yyyy"),
-    padding,
-    height - padding,
-  );
+  context.fillText(format(pubDate, "MMMM yyyy"), PADDING, HEIGHT - PADDING);
 
   return canvas.toBuffer("image/png");
 }
@@ -123,17 +126,3 @@ function getLines(ctx: any, text: string, maxWidth: number) {
   lines.push(currentLine);
   return lines;
 }
-
-const hexToBase10 = (h: string) => parseInt(h, 16);
-// For simplicity, assume hexValue of shape #xxxxxx
-const hexToRgb = (hexValue: string) => {
-  const rHex = hexValue.substring(1, 3);
-  const gHex = hexValue.substring(3, 5);
-  const bHex = hexValue.substring(5, 7);
-
-  const r = hexToBase10(rHex);
-  const g = hexToBase10(gHex);
-  const b = hexToBase10(bHex);
-
-  return { r, g, b };
-};
