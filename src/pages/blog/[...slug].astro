@@ -14,7 +14,7 @@ export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
     params: { slug: post.slug },
-    props: post,
+    props: { ...post },
   }));
 }
 type Props = CollectionEntry<"blog">;
@@ -27,6 +27,7 @@ const { Content } = await post.render();
   title={post.data.title}
   description={post.data.metaDescription || post.data.description}
   keywords={post.data.keywords}
+  image={`/og/blog/${post.slug}.png`}
 >
   <ContentContainer class="py-12">
     <SectionHeader

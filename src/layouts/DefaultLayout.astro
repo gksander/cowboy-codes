@@ -8,20 +8,26 @@ interface Props {
   title: string;
   description?: string;
   keywords?: string[];
-  // image?: string;
+  image?: string;
 }
 
 const {
   title = "Grant Sander",
   description = "Grant Sander's personal site.",
   keywords = [],
+  image,
 } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} keywords={keywords} />
+    <BaseHead
+      title={title}
+      description={description}
+      keywords={keywords}
+      image={image}
+    />
   </head>
   <body class="min-h-screen flex flex-col bg-white dark:bg-gray-800">
     <Header />
