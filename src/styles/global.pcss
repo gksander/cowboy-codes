@@ -24,6 +24,15 @@ body {
   display: none;
 }
 
+/* Default styling for scroll bars */
+*::-webkit-scrollbar {
+  /* width: 15px; */
+  @apply h-2;
+}
+*::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-700 rounded;
+}
+
 /* For IE, Edge and Firefox */
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */

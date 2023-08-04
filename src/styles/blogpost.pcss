@@ -1,7 +1,7 @@
 /* Astro images get tangled up and hard to customize. This takes a CSS appproach */
 p:has(> img:only-child) {
   > img {
-    @apply border rounded-lg overflow-hidden shadow-md mx-auto;
+    @apply border dark:border-gray-700 rounded-lg overflow-hidden shadow-md mx-auto;
   }
 }
 
@@ -29,11 +29,11 @@ pre.shiki {
   }
 
   & div.code-container {
-    @apply overflow-hidden pb-6 -mb-8;
+    @apply overflow-hidden pb-8 -mb-8;
   }
 
   & code {
-    @apply block overflow-auto;
+    @apply block overflow-auto pb-2 -mb-3;
   }
 
   & div.line {
@@ -92,14 +92,14 @@ pre.shiki {
     }
 
     & div.highlight {
-      @apply bg-secondary-100 min-w-fit;
+      @apply bg-secondary-100 dark:bg-secondary-900 min-w-fit;
     }
 
     & .line::before {
       content: counter(step);
       counter-increment: step;
       width: 1rem;
-      @apply mr-6 pl-2 inline-block text-right text-gray-400 dark:text-gray-600;
+      @apply mr-6 pl-2 inline-block text-right text-gray-400;
     }
   }
 }
