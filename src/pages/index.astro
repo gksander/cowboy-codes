@@ -193,7 +193,7 @@ const projects: Project[] = await Promise.all(
     image: item.image
       ? await getOptimizedImageSrc({
           src: item.image,
-          width: 600,
+          width: 900,
         })
       : undefined,
   })),
@@ -213,7 +213,6 @@ const projects: Project[] = await Promise.all(
       image={portrait}
       alt="Headshot"
       class="w-[450px] mx-auto"
-      loading="eager"
       id="headshot"
     />
   </ContentContainer>
