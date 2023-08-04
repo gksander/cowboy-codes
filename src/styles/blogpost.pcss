@@ -29,15 +29,15 @@ pre.shiki {
   }
 
   & div.code-container {
-    @apply overflow-hidden pb-8 -mb-8;
+    @apply overflow-x-auto overflow-y-hidden pb-4;
   }
 
   & code {
-    @apply block overflow-auto pb-2 -mb-3;
+    @apply block min-w-fit pb-2 -mb-5;
   }
 
   & div.line {
-    @apply min-h-[1em];
+    @apply min-h-[1em] min-w-fit;
   }
 
   /* For twoslash popovers */
