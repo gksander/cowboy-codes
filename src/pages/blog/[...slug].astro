@@ -20,10 +20,14 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
-const { Content, ...rest } = await post.render();
+const { Content } = await post.render();
 ---
 
-<DefaultLayout title="Blog Post">
+<DefaultLayout
+  title={post.data.title}
+  description={post.data.metaDescription || post.data.description}
+  keywords={post.data.keywords}
+>
   <ContentContainer class="py-12">
     <SectionHeader
       subtitle={format(post.data.pubDate, "MMMM d, yyyy")}
@@ -35,8 +39,9 @@ const { Content, ...rest } = await post.render();
     </SectionHeader>
     <div
       class={clsx(
-        "max-w-none mx-auto prose dark:prose-invert",
-        "prose-code:before:hidden prose-code:after:hidden prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:bg-gray-100 dark:prose-code:bg-gray-700",
+        "mx-auto prose dark:prose-invert",
+        "prose-code:before:hidden prose-code:after:hidden prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:bg-gray-100 dark:prose-code:bg-gray-700 prose-code:font-medium",
+        "hover:prose-a:text-primary-700 dark:hover:prose-a:text-primary-300",
       )}
     >
       <Content components={{ pre: Pre }} />

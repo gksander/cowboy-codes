@@ -47,7 +47,8 @@ pre.shiki {
   --shiki-token-punctuation: theme("colors.gray.700");
   --shiki-token-link: #ee0000;
 
-  @apply relative py-0 leading-tight p-4 pb-0 rounded bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-black;
+  @apply relative py-0 leading-snug p-4 pb-0 rounded bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-black;
+  @apply text-sm;
   & * {
     font-family: "JetBrains Mono Variable", monospace;
   }
@@ -58,6 +59,10 @@ pre.shiki {
 
   & div.code-container {
     @apply overflow-auto pb-6 -mb-8;
+  }
+
+  & div.line {
+    @apply min-h-[1em];
   }
 
   /* For twoslash popovers */
