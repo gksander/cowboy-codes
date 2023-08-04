@@ -6,6 +6,17 @@ import tailwind from "@astrojs/tailwind";
 import remarkToc from "remark-toc";
 import shikiTwoslash from "remark-shiki-twoslash";
 
+if (
+  process.env.LD_LIBRARY_PATH == null ||
+  !process.env.LD_LIBRARY_PATH.includes(
+    `${process.env.PWD}/node_modules/canvas/build/Release:`,
+  )
+) {
+  process.env.LD_LIBRARY_PATH = `${
+    process.env.PWD
+  }/node_modules/canvas/build/Release:${process.env.LD_LIBRARY_PATH || ""}`;
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://cowboy.codes",
