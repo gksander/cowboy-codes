@@ -5,6 +5,7 @@ import preact from "@astrojs/preact";
 import tailwind from "@astrojs/tailwind";
 import remarkToc from "remark-toc";
 import shikiTwoslash from "remark-shiki-twoslash";
+import { rehypeHeadingIds } from "@astrojs/markdown-remark";
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,6 +24,7 @@ export default defineConfig({
         remarkToc,
         [shikiTwoslash.default, { themes: ["css-variables"] }],
       ],
+      rehypePlugins: [rehypeHeadingIds],
     }),
   ],
   experimental: {

@@ -8,7 +8,8 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 import { SectionHeader } from "../../components/SectionHeader";
 import clsx from "clsx";
 // MD components
-import Pre from "../../components/blog/Pre.astro";
+import Pre from "@components/blog/Pre.astro";
+import "@styles/blogpost.pcss";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");

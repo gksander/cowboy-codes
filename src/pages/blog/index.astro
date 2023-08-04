@@ -7,7 +7,6 @@ import { SubsectionHeader } from "../../components/SubsectionHeader";
 import { Carousel } from "../../components/Carousel";
 import { Image } from "astro:assets";
 import banner from "../../assets/writing.jpg";
-import { BlogPostListItem } from "../../components/blog/BlogPostListItem";
 import { CarouselItem } from "../../components/Carousel";
 
 const externalPosts = (await getCollection("externalPost"))
@@ -15,7 +14,7 @@ const externalPosts = (await getCollection("externalPost"))
   .map((el) => el.data);
 
 const posts = (await getCollection("blog")).sort(
-  (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
@@ -55,16 +54,18 @@ const posts = (await getCollection("blog")).sort(
     <SubsectionHeader className="mb-8" subtitle="Posts on my own behalf.">
       Personal Blog Posts
     </SubsectionHeader>
-    {
-      posts.map((post) => (
-        <CarouselItem
-          title={post.data.title}
-          description={post.data.description}
-          subsubtitle={format(post.data.pubDate, "MMMM d, yyyy")}
-          href={`/blog/${post.slug}`}
-          isInternalLink={true}
-        />
-      ))
-    }
+    <div class="flex flex-col gap-6">
+      {
+        posts.map((post) => (
+          <CarouselItem
+            title={post.data.title}
+            description={post.data.description}
+            subsubtitle={format(post.data.pubDate, "MMMM d, yyyy")}
+            href={`/blog/${post.slug}`}
+            isInternalLink={true}
+          />
+        ))
+      }
+    </div>
   </ContentContainer>
 </DefaultLayout>

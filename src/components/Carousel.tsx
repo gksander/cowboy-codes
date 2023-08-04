@@ -6,7 +6,7 @@ type Props = {
   items: {
     title: string;
     description: string;
-    subtitle: string;
+    subtitle?: string;
     subsubtitle?: string;
     image?: OptimizedImageDetails;
     href?: string;
