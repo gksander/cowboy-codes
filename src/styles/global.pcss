@@ -2,17 +2,12 @@
 
 html {
   font-size: 18px;
-  font-family: "Montserrat", sans-serif;
   scroll-behavior: smooth;
 }
 
 html,
 body {
   @apply overflow-x-hidden;
-}
-
-.font-fancy {
-  font-family: "Sansita Swashed", cursive;
 }
 
 @layer utilities {
@@ -52,11 +47,17 @@ pre.shiki {
   --shiki-token-punctuation: theme("colors.gray.700");
   --shiki-token-link: #ee0000;
 
-  @apply relative py-0 leading-tight p-4 rounded bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-black;
-  font-family: "JetBrains Mono Variable", monospace;
+  @apply relative py-0 leading-tight p-4 pb-0 rounded bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-black;
+  & * {
+    font-family: "JetBrains Mono Variable", monospace;
+  }
 
-  .language-id {
-    @apply absolute bottom-2 right-2 leading-none text-primary-700 dark:text-primary-400;
+  & .language-id {
+    @apply absolute bottom-2 right-4 leading-none text-primary-700 dark:text-primary-400 text-sm;
+  }
+
+  & div.code-container {
+    @apply overflow-auto pb-6 -mb-8;
   }
 
   /* For twoslash popovers */
@@ -81,7 +82,7 @@ pre.shiki {
   }
 
   .error {
-    @apply flex w-full items-center gap-2 border-t-4 border-red-400 dark:border-red-600 rounded-sm mt-2 mb-1 p-3 bg-gray-200 dark:bg-gray-800 text-sm;
+    @apply flex w-fit min-w-full items-center gap-2 border-t-4 border-red-400 dark:border-red-600 rounded-sm mt-2 mb-1 p-3 bg-gray-200 dark:bg-gray-800 text-sm;
 
     > span:first-child {
       @apply flex-1;

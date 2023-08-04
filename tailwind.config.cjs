@@ -11,6 +11,13 @@ module.exports = {
         primary: colors.cyan,
         secondary: colors.blue,
       },
+      fontFamily: {
+        sans: [
+          "Montserrat Variable",
+          "Montserrat",
+          ...defaultTheme.fontFamily.sans,
+        ],
+      },
 
       // Add a `breakout` class for the Experience scroll section, so we can breakout of container.
       spacing: ({ theme }) => {
