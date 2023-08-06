@@ -63,6 +63,7 @@ const posts = (await getCollection("blog")).sort(
             subsubtitle={format(post.data.pubDate, "MMMM d, yyyy")}
             href={`/blog/${post.slug}`}
             isInternalLink={true}
+            shouldWrapTitle={true}
           />
         ))
       }

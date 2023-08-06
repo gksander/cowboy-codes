@@ -47,11 +47,14 @@ export const CarouselItem = (
     isPrimary?: boolean;
     className?: string;
     shouldClipText?: boolean;
+    shouldWrapTitle?: boolean;
     isInternalLink?: boolean;
   },
 ) => {
   const titleClass = clsx(
-    "font-bold self-start overflow-x-hidden whitespace-nowrap text-ellipsis max-w-full",
+    "font-bold self-start max-w-full",
+    !item.shouldWrapTitle &&
+      "overflow-x-hidden whitespace-nowrap text-ellipsis",
     item.isPrimary ? "text-gradient" : "text-gray-800 dark:text-gray-200",
     item.href &&
       "hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-150",

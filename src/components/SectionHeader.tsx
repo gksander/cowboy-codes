@@ -6,12 +6,14 @@ export function SectionHeader({
   subtitle,
   align = "center",
   hasGradientTitle = false,
+  isLarge = false,
   className,
 }: {
   subtitle?: string;
   className?: string;
   align?: "left" | "center";
   hasGradientTitle?: boolean;
+  isLarge?: boolean;
   children: ComponentChildren;
 }) {
   return (
@@ -23,8 +25,11 @@ export function SectionHeader({
     >
       <h2
         className={clsx(
-          "font-bold text-2xl sm:text-3xl mb-2",
+          "font-bold mb-2",
           hasGradientTitle ? "text-gradient" : "dark:text-gray-200",
+          isLarge
+            ? "text-3xl md:text-6xl leading-norm"
+            : "text-2xl sm:text-3xl",
         )}
       >
         {children}
