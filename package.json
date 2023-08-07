@@ -39,6 +39,8 @@
     "jsdom": "^19.0.0",
     "prettier": "^3.0.1",
     "prettier-plugin-astro": "^0.11.0",
+    "rehype-autolink-headings": "^6.1.1",
+    "rehype-slug": "^5.1.0",
     "sharp": "^0.32.4"
   }
 }

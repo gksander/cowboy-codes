@@ -24,7 +24,7 @@ pre.shiki {
     font-family: "JetBrains Mono Variable", monospace;
   }
 
-  & .language-id {
+  .language-id {
     @apply absolute bottom-2 right-4 leading-none text-primary-700 dark:text-primary-400;
   }
 
@@ -117,5 +117,14 @@ pre.shiki {
     --shiki-token-string-expression: theme("colors.secondary.300");
     --shiki-token-punctuation: theme("colors.gray.300");
     --shiki-token-link: #ee0000;
+  }
+}
+
+/* For heading links */
+
+:is(h2, h3, h4, h5, h6):has(> a) {
+  > a {
+    @apply !no-underline transition-colors duration-150;
+    @apply after:content-['#'] after:opacity-0 after:hover:opacity-100 after:transition-opacity after:duration-150 after:ml-1;
   }
 }
