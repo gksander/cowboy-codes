@@ -18,6 +18,9 @@ const blog = defineCollection({
       .transform((str) => (str ? new Date(str) : undefined)),
     heroImage: z.string().optional(),
 
+    // Whether or not to load Katex
+    hasMath: z.boolean().optional().default(false),
+
     // Optional config for OG image
     ogConfig: z
       .object({

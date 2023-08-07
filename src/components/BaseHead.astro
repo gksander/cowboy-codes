@@ -9,11 +9,18 @@ interface Props {
   description: string;
   keywords?: string[];
   image?: string;
+  hasKatex?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, keywords = [], image } = Astro.props;
+const {
+  title,
+  description,
+  keywords = [],
+  image,
+  hasKatex = false,
+} = Astro.props;
 ---
 
 <!-- Global Metadata -->
@@ -60,3 +67,15 @@ const { title, description, keywords = [], image } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 {image && <meta property="twitter:image" content={new URL(image, Astro.url)} />}
+
+<!-- Katex -->
+{
+  hasKatex && (
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
+      crossorigin="anonymous"
+    />
+  )
+}

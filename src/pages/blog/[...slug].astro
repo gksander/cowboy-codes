@@ -31,6 +31,7 @@ const { Content, headings } = await post.render();
   keywords={post.data.keywords}
   image={`/og/blog/${post.slug}.png`}
   isFat={true}
+  hasKatex={post.data.hasMath}
 >
   <ContentContainer
     class="py-12 grid grid-cols-1 lg:grid-cols-[1fr,300px] gap-x-12 gap-y-12"

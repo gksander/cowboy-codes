@@ -7,6 +7,8 @@ import remarkToc from "remark-toc";
 import shikiTwoslash from "remark-shiki-twoslash";
 import autolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,8 +26,13 @@ export default defineConfig({
       remarkPlugins: [
         [remarkToc],
         [shikiTwoslash.default, { themes: ["css-variables"] }],
+        remarkMath,
       ],
-      rehypePlugins: [rehypeSlug, [autolinkHeadings, { behavior: "wrap" }]],
+      rehypePlugins: [
+        rehypeSlug,
+        [autolinkHeadings, { behavior: "wrap" }],
+        rehypeKatex,
+      ],
     }),
   ],
   experimental: {
