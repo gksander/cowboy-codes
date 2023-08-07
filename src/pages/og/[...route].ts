@@ -1,4 +1,5 @@
 import path from "node:path";
+import imageSize from "image-size";
 import colors from "../../../scripts/tw-colors.json";
 import pkg from "canvas";
 const { registerFont, createCanvas, loadImage } = pkg;
@@ -35,6 +36,7 @@ export async function get({ props }: { props: BlogData }) {
     body: await drawOGImage({
       title: props.title,
       pubDate: new Date(props.pubDate),
+      ogConfig: props?.ogConfig,
     }),
   };
 }
@@ -53,10 +55,16 @@ registerFont(
 async function drawOGImage({
   title,
   pubDate,
+  ogConfig,
 }: {
   title: string;
   pubDate: Date;
+  ogConfig?: BlogData["ogConfig"];
 }) {
+  const isLight = ogConfig?.colorMode === "light";
+  const isFeatureImageFullBleed = ogConfig?.featureImageFullBleed !== false;
+  const featureImagePath = ogConfig?.featureImagePath || "headshot.png";
+
   const SC = 2;
   const WIDTH = SC * 1200;
   const HEIGHT = SC * 627;
@@ -69,30 +77,37 @@ async function drawOGImage({
   // Background
   // Create gradient
   const grd = context.createLinearGradient(0, 0, WIDTH, HEIGHT);
-  grd.addColorStop(0.4, colors.gray["800"]);
-  grd.addColorStop(1, colors.secondary["900"]);
+  grd.addColorStop(0.4, isLight ? colors.primary["100"] : colors.gray["800"]);
+  grd.addColorStop(
+    1,
+    isLight ? colors.primary["200"] : colors.secondary["900"],
+  );
   context.fillStyle = grd;
   context.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Headshot
-  const AR = 1958 / 2000; // height / width
-  const IMG_WIDTH = SC * 350;
+  // Feature image
+  // TODO: Get image dimensions...
+  const imgPath = path.resolve(process.cwd(), "src/assets", featureImagePath);
+  const { width = 1, height = 1 } = await imageSize(imgPath);
+
+  const AR = height / width; // height / width
+  const IMG_WIDTH = SC * (ogConfig?.featureImageWidth || 350);
   const IMG_HEIGHT = IMG_WIDTH * AR;
   context.drawImage(
-    await loadImage(path.resolve(process.cwd(), "src/assets/headshot.png")),
-    WIDTH - IMG_WIDTH,
-    HEIGHT - IMG_HEIGHT,
+    await loadImage(imgPath),
+    WIDTH - (isFeatureImageFullBleed ? 0 : PADDING) - IMG_WIDTH,
+    HEIGHT - (isFeatureImageFullBleed ? 0 : PADDING) - IMG_HEIGHT,
     IMG_WIDTH,
     IMG_HEIGHT,
   );
 
   // Title
-  const titleFontSize = SC * 75;
+  const titleFontSize = SC * (ogConfig?.titleFontSize || 75);
   const lineHeight = 1.5;
   context.font = `${titleFontSize}pt 'Montserrat Thin'`;
   context.textAlign = "left";
   context.textBaseline = "top";
-  context.fillStyle = colors.white;
+  context.fillStyle = isLight ? colors.gray["900"] : colors.white;
   const lines = getLines(context, title, 0.85 * WIDTH);
   lines.forEach((line, i) => {
     context.fillText(line, PADDING, PADDING + i * lineHeight * titleFontSize);
@@ -102,7 +117,7 @@ async function drawOGImage({
   context.font = `${0.5 * titleFontSize}pt 'Montserrat Thin'`;
   context.textAlign = "left";
   context.textBaseline = "bottom";
-  context.fillStyle = colors.gray["300"];
+  context.fillStyle = isLight ? colors.gray["800"] : colors.gray["300"];
   context.fillText(format(pubDate, "MMMM yyyy"), PADDING, HEIGHT - PADDING);
 
   return canvas.toBuffer("image/png");

@@ -17,6 +17,17 @@ const blog = defineCollection({
       .optional()
       .transform((str) => (str ? new Date(str) : undefined)),
     heroImage: z.string().optional(),
+
+    // Optional config for OG image
+    ogConfig: z
+      .object({
+        colorMode: z.enum(["light", "dark"]).optional(),
+        titleFontSize: z.number().optional(),
+        featureImagePath: z.string().optional(), // relative to src/assets
+        featureImageFullBleed: z.boolean().optional(),
+        featureImageWidth: z.number().optional(), // default: 350
+      })
+      .optional(),
   }),
 });
 

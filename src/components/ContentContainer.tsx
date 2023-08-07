@@ -14,7 +14,7 @@ export function ContentContainer({
     <div
       class={clsx(
         "container px-4 md:px-8",
-        isFat ? "max-w-6xl" : "max-w-3xl",
+        isFat ? "max-w-5xl" : "max-w-3xl",
         className,
       )}
     >
