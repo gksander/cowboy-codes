@@ -10,6 +10,7 @@ import clsx from "clsx";
 // MD components
 import Pre from "@components/blog/Pre.astro";
 import "@styles/blogpost.pcss";
+import { TableOfContents } from "@components/blog/TableOfContents";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -21,7 +22,7 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 ---
 
 <DefaultLayout
@@ -29,25 +30,33 @@ const { Content } = await post.render();
   description={post.data.metaDescription || post.data.description}
   keywords={post.data.keywords}
   image={`/og/blog/${post.slug}.png`}
+  isFat={true}
 >
-  <ContentContainer class="py-12">
+  <ContentContainer
+    class="py-12 grid grid-cols-1 lg:grid-cols-[1fr,300px] gap-x-12 gap-y-12"
+    isFat={true}
+  >
     <SectionHeader
       subtitle={format(post.data.pubDate, "MMMM d, yyyy")}
       align="left"
-      className="mb-12"
       hasGradientTitle={true}
       isLarge={true}
     >
       {post.data.title}
     </SectionHeader>
-    <div
-      class={clsx(
-        "mx-auto prose dark:prose-invert",
-        "prose-code:before:hidden prose-code:after:hidden prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:bg-gray-100 dark:prose-code:bg-gray-700 prose-code:font-medium",
-        "hover:prose-a:text-primary-700 dark:hover:prose-a:text-primary-300",
-      )}
-    >
-      <Content components={{ pre: Pre }} />
+
+    <div class="flex-grow overflow-hidden col-start-1">
+      <div
+        class={clsx(
+          "max-w-none prose dark:prose-invert",
+          "prose-code:before:hidden prose-code:after:hidden prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:bg-gray-100 dark:prose-code:bg-gray-700 prose-code:font-medium",
+          "hover:prose-a:text-primary-700 dark:hover:prose-a:text-primary-300",
+        )}
+      >
+        <Content components={{ pre: Pre }} />
+      </div>
     </div>
+
+    <TableOfContents headings={headings} client:visible />
   </ContentContainer>
 </DefaultLayout>

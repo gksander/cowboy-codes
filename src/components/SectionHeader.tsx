@@ -28,7 +28,7 @@ export function SectionHeader({
           "font-bold mb-2",
           hasGradientTitle ? "text-gradient" : "dark:text-gray-200",
           isLarge
-            ? "text-3xl md:text-6xl leading-norm"
+            ? "text-3xl md:text-4xl leading-norm"
             : "text-2xl sm:text-3xl",
         )}
       >

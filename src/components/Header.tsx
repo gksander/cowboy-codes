@@ -3,10 +3,13 @@ import { FaGithub } from "./icons/FaGithub";
 import { FaLinkedIn } from "./icons/FaLinkedIn";
 import clsx from "clsx";
 
-export function Header() {
+export function Header({ isFat = false }: { isFat?: boolean }) {
   return (
     <nav>
-      <ContentContainer class="flex justify-between p-5 text-gray-700 dark:text-gray-300">
+      <ContentContainer
+        class="flex justify-between p-5 text-gray-700 dark:text-gray-300"
+        isFat={isFat}
+      >
         <a href="/" class="inline-block font-bold text-lg text-gradient">
           gksander
         </a>

@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   keywords?: string[];
   image?: string;
+  isFat?: boolean;
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   description = "Grant Sander's personal site.",
   keywords = [],
   image,
+  isFat = false,
 } = Astro.props;
 ---
 
@@ -30,10 +32,10 @@ const {
     />
   </head>
   <body class="min-h-screen flex flex-col bg-white dark:bg-gray-800">
-    <Header />
+    <Header isFat={isFat} />
     <main class="flex-grow">
       <slot />
     </main>
-    <Footer />
+    <Footer isFat={isFat} />
   </body>
 </html>

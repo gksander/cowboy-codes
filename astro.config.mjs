@@ -22,7 +22,7 @@ export default defineConfig({
       syntaxHighlight: false,
       shikiConfig: { theme: "one-dark-pro" },
       remarkPlugins: [
-        remarkToc,
+        [remarkToc],
         [shikiTwoslash.default, { themes: ["css-variables"] }],
       ],
       rehypePlugins: [rehypeSlug, [autolinkHeadings, { behavior: "wrap" }]],
