@@ -1,10 +1,9 @@
 import path from "node:path";
 import imageSize from "image-size";
 import colors from "../../../scripts/tw-colors.json";
-import pkg from "canvas";
-const { registerFont, createCanvas, loadImage } = pkg;
 import { format } from "date-fns";
 import type { CollectionEntry } from "astro:content";
+import { Canvas, FontLibrary, loadImage } from "skia-canvas";
 
 type BlogData = CollectionEntry<"blog">["data"];
 
@@ -41,15 +40,9 @@ export async function get({ props }: { props: BlogData }) {
   };
 }
 
-/**
- * Drawing
- */
-
-registerFont(
+FontLibrary.use(
+  "Montserrat Thin",
   path.resolve(process.cwd(), "src/assets/montserrat-latin-500-normal.ttf"),
-  {
-    family: "Montserrat Thin",
-  },
 );
 
 async function drawOGImage({
@@ -61,39 +54,36 @@ async function drawOGImage({
   pubDate: Date;
   ogConfig?: BlogData["ogConfig"];
 }) {
+  // Input massage
   const isLight = ogConfig?.colorMode === "light";
   const isFeatureImageFullBleed = ogConfig?.featureImageFullBleed !== false;
   const featureImagePath = ogConfig?.featureImagePath || "headshot.png";
 
-  const SC = 2;
-  const WIDTH = SC * 1200;
-  const HEIGHT = SC * 627;
-  const PADDING = SC * 50;
-
-  // Instantiate the canvas object
-  const canvas = createCanvas(WIDTH, HEIGHT);
-  const context = canvas.getContext("2d");
+  // Canvas config
+  const WIDTH = 1200;
+  const HEIGHT = 627;
+  const PADDING = 50;
+  const canvas = new Canvas(WIDTH, HEIGHT),
+    ctx = canvas.getContext("2d");
 
   // Background
-  // Create gradient
-  const grd = context.createLinearGradient(0, 0, WIDTH, HEIGHT);
+  const grd = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
   grd.addColorStop(0.4, isLight ? colors.primary["100"] : colors.gray["800"]);
   grd.addColorStop(
     1,
     isLight ? colors.primary["200"] : colors.secondary["900"],
   );
-  context.fillStyle = grd;
-  context.fillRect(0, 0, WIDTH, HEIGHT);
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
   // Feature image
-  // TODO: Get image dimensions...
   const imgPath = path.resolve(process.cwd(), "src/assets", featureImagePath);
   const { width = 1, height = 1 } = await imageSize(imgPath);
 
   const AR = height / width; // height / width
-  const IMG_WIDTH = SC * (ogConfig?.featureImageWidth || 350);
+  const IMG_WIDTH = ogConfig?.featureImageWidth || 350;
   const IMG_HEIGHT = IMG_WIDTH * AR;
-  context.drawImage(
+  ctx.drawImage(
     await loadImage(imgPath),
     WIDTH - (isFeatureImageFullBleed ? 0 : PADDING) - IMG_WIDTH,
     HEIGHT - (isFeatureImageFullBleed ? 0 : PADDING) - IMG_HEIGHT,
@@ -102,42 +92,20 @@ async function drawOGImage({
   );
 
   // Title
-  const titleFontSize = SC * (ogConfig?.titleFontSize || 75);
-  const lineHeight = 1.5;
-  context.font = `${titleFontSize}pt 'Montserrat Thin'`;
-  context.textAlign = "left";
-  context.textBaseline = "top";
-  context.fillStyle = isLight ? colors.gray["900"] : colors.white;
-  const lines = getLines(context, title, 0.85 * WIDTH);
-  lines.forEach((line, i) => {
-    context.fillText(line, PADDING, PADDING + i * lineHeight * titleFontSize);
-  });
+  const titleFontSize = ogConfig?.titleFontSize || 75;
+  ctx.font = `${titleFontSize}pt 'Montserrat Thin'`;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.fillStyle = isLight ? colors.gray["900"] : colors.white;
+  ctx.textWrap = true;
+  ctx.fillText(title, PADDING, PADDING, 0.85 * WIDTH);
 
   // Publication date
-  context.font = `${0.5 * titleFontSize}pt 'Montserrat Thin'`;
-  context.textAlign = "left";
-  context.textBaseline = "bottom";
-  context.fillStyle = isLight ? colors.gray["800"] : colors.gray["300"];
-  context.fillText(format(pubDate, "MMMM yyyy"), PADDING, HEIGHT - PADDING);
+  ctx.font = `${0.5 * titleFontSize}pt 'Montserrat Thin'`;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "bottom";
+  ctx.fillStyle = isLight ? colors.gray["800"] : colors.gray["300"];
+  ctx.fillText(format(pubDate, "MMMM yyyy"), PADDING, HEIGHT - PADDING);
 
-  return canvas.toBuffer("image/png");
-}
-
-function getLines(ctx: any, text: string, maxWidth: number) {
-  var words = text.split(" ");
-  var lines = [];
-  var currentLine = words[0];
-
-  for (var i = 1; i < words.length; i++) {
-    var word = words[i];
-    var width = ctx.measureText(currentLine + " " + word).width;
-    if (width < maxWidth) {
-      currentLine += " " + word;
-    } else {
-      lines.push(currentLine);
-      currentLine = word;
-    }
-  }
-  lines.push(currentLine);
-  return lines;
+  return canvas.toBuffer("png", { density: 2 });
 }

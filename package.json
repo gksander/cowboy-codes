@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "vercel-install": "yum install gcc-c++ cairo-devel pango-devel libjpeg-turbo-devel giflib-devel",
+    "vercel-install": "",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
@@ -35,15 +35,13 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^20.4.7",
-    "astro-og-canvas": "^0.1.8",
-    "canvas": "2.8.0",
-    "jsdom": "^19.0.0",
     "prettier": "^3.0.1",
     "prettier-plugin-astro": "^0.11.0",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-katex": "^6.0.3",
     "rehype-slug": "^5.1.0",
     "remark-math": "^5.1.1",
-    "sharp": "^0.32.4"
+    "sharp": "^0.32.4",
+    "skia-canvas": "^1.0.1"
   }
 }
