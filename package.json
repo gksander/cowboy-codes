@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "vercel-install": "",
+    "vercel-install": "echo \"okay\"",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
