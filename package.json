@@ -43,5 +43,8 @@
     "remark-math": "^5.1.1",
     "sharp": "^0.32.4",
     "skia-canvas": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
