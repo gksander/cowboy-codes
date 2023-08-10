@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.19.7",
@@ -35,6 +36,7 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^20.4.7",
+    "@types/sharp": "^0.32.0",
     "prettier": "^3.0.1",
     "prettier-plugin-astro": "^0.11.0",
     "rehype-autolink-headings": "^6.1.1",

@@ -13,12 +13,20 @@ export function OptimizedImage({
   id?: string;
   isHighPriority?: boolean;
 }) {
+  const avifSrc = image.src.find(
+    (img) => img.includes(".avif") || img.includes("f=avif"),
+  );
+  const webpSrc = image.src.find(
+    (img) => img.includes(".webp") || img.includes("f=webp"),
+  );
+  const defaultSrc = image.src.at(-1) || "";
+
   return (
     <picture>
-      <source type="image/avif" srcset={image.src[0]} />
-      <source type="image/webp" srcSet={image.src[1]} />
+      {avifSrc && <source type="image/avif" srcset={avifSrc} />}
+      {webpSrc && <source type="image/webp" srcSet={webpSrc} />}
       <img
-        src={image.src[2]}
+        src={defaultSrc}
         alt={alt}
         class={className}
         style={{
@@ -26,7 +34,6 @@ export function OptimizedImage({
         }}
         {...image.attributes}
         id={id}
-        // @ts-ignore
       />
     </picture>
   );
