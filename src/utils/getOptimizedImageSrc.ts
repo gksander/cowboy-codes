@@ -10,7 +10,7 @@ export async function getOptimizedImageSrc(payload: ImageTransform) {
       avif.src,
       webp.src,
       typeof payload.src === "string" ? payload.src : payload.src.src,
-    ] as const,
+    ] as string[],
     attributes: avif.attributes,
   };
 }

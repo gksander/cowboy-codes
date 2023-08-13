@@ -107,16 +107,16 @@ async function drawOGImage({
   );
 
   // Title
-  const titleFontSize = ogConfig?.titleFontSize || 75;
+  const titleFontSize = ogConfig?.titleFontSize || 64;
   ctx.font = `${titleFontSize}pt 'Montserrat Thin'`;
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
   ctx.fillStyle = isLight ? colors.gray["900"] : colors.white;
   ctx.textWrap = true;
-  ctx.fillText(title, PADDING, PADDING, 0.85 * WIDTH);
+  ctx.fillText(title, PADDING, PADDING, 0.9 * WIDTH);
 
   // Publication date
-  ctx.font = `${0.5 * titleFontSize}pt 'Montserrat Thin'`;
+  ctx.font = `36pt 'Montserrat Thin'`;
   ctx.textAlign = "left";
   ctx.textBaseline = "bottom";
   ctx.fillStyle = isLight ? colors.gray["800"] : colors.gray["300"];

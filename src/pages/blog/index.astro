@@ -8,17 +8,18 @@ import { Carousel } from "../../components/Carousel";
 import { Image } from "astro:assets";
 import banner from "../../assets/writing.jpg";
 import { CarouselItem } from "../../components/Carousel";
+import { BlogPostListItem } from "@components/blog/BlogPostListItem";
 
 const externalPosts = (await getCollection("externalPost"))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .map((el) => el.data);
 
-const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = (await getCollection("blog"))
+  .filter((p) => p.data.draft !== true)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<DefaultLayout title="Grant Sander Blog">
+<DefaultLayout title="Grant Sander Blog" isFat>
   <div class="relative">
     <Image
       src={banner}
@@ -33,7 +34,7 @@ const posts = (await getCollection("blog")).sort(
     </div>
   </div>
 
-  <ContentContainer class="py-12">
+  <ContentContainer class="py-12" isFat>
     <SubsectionHeader subtitle="From places elsewhere." className="mb-8">
       External Blog Posts
     </SubsectionHeader>
@@ -54,19 +55,8 @@ const posts = (await getCollection("blog")).sort(
     <SubsectionHeader className="mb-8" subtitle="Posts on my own behalf.">
       Personal Blog Posts
     </SubsectionHeader>
-    <div class="flex flex-col gap-6">
-      {
-        posts.map((post) => (
-          <CarouselItem
-            title={post.data.title}
-            description={post.data.description}
-            subsubtitle={format(post.data.pubDate, "MMMM d, yyyy")}
-            href={`/blog/${post.slug}`}
-            isInternalLink={true}
-            shouldWrapTitle={true}
-          />
-        ))
-      }
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
+      {posts.map((post) => <BlogPostListItem {...post} />)}
     </div>
   </ContentContainer>
 </DefaultLayout>

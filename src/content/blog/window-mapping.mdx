@@ -1,0 +1,147 @@
+---
+title: "Window Mapping"
+description: "WIP"
+keywords:
+  - Math
+pubDate: "Aug 13 2023"
+hasMath: true
+draft: true
+---
+
+import { CartesianCoordsExample } from "@components/posts/window-mapping/CartesianCoordsExample";
+import { CartesianDiagram } from "@components/posts/window-mapping/CartesianDiagram";
+import { OneDimensionalMapping } from "@components/posts/window-mapping/OneDimensionalMapping";
+
+## Introduction
+
+As web or mobile developers, we live largely in a two-dimensional (2D) world. Sure, you can build something in three dimensions using something like [three.js](https://threejs.org/) – but the reality is, most of the interfaces we build and interact with on digital devices are two-dimensional.
+
+Furthermore, most of these 2D graphics that we interface typically share an important feature: they're 2D **grid** systems – where there are horizontal and vertical dimensions that are orthoginal to one another. This allows us to think at a very primitive level, like: "move three units to the right, and four units down".
+
+There are scenarios where we want to _map_ between different 2D grids. For example, let's say you have a `1200px x 1200px` scene or picture that you want to draw in a `500px x 500px` HTML5 `<canvas />` element. We need to "scale" the source scene down to fit the canvas, and this scaling operation is actually an example of doing a _linear mapping_ between the two grids.
+
+TODO: Diagram of mapping source into the destination
+
+A simple scaling operation might seem to suffice here, but as we look to add in features like translations and "zooming in preserving keeping focal point", we need a scalable system for handling these mappings.
+
+## The Linear Algebra approach
+
+Linear mappings between 2D (or 3D) grids are generally defined in terms of transformation matrices. A common practice is to represent a 2D point $(x, y)$ as the 3D vector:
+
+$$
+(x,y) \rightarrow
+\begin{bmatrix}
+x\\y\\0
+\end{bmatrix}
+$$
+
+where we set the third dimension ($z$) to 0. For reasons we won't cover here, in 2D graphics we generally work one dimension up and use 3D transformation matrices and "ignore" the $z$ dimension.
+
+Specific 3x3 matrices can then be used as linear mappings (or transformations), where left-multiplying the above 3D vector by the matrix will transform it:
+
+$$
+\begin{bmatrix}
+x' \\ y' \\ z'
+\end{bmatrix}
+=
+\begin{bmatrix}
+a&b&c\\ d&e&f \\ g&h&i
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+x\\y\\0
+\end{bmatrix}
+$$
+
+When applied to the entirety of the "input space", it will linearly map that space into a new one.
+
+Translating and scaling are two common linear mappings that we use in graphics work, and they have well-known transformation matrices. To translate a space horizontally by $t_x$ and vertically by $t_y$, you can apply the following matrix:
+
+$$
+\begin{bmatrix}
+1 & 0 & t_x \\ 0 & 1 & t_y \\ 0 & 0 & 1
+\end{bmatrix}
+$$
+
+To scale horizontally by $s_x$ and vertically by $s_y$, you apply the following matrix:
+
+$$
+\begin{bmatrix}
+s_x & 0 & 0 \\ 0 & s_y & 0 \\ 0 & 0 & 1
+\end{bmatrix}
+$$
+
+You can also apply multiple transformation matrices – which is the mathematical magic that powers most graphics engines.
+
+As a more elementary example, scaling by default happens "about the origin" but sometimes you want to scale about a different point $(x_0, y_0)$. To do this, you have to: translate (or shift) the view so that $(x_0, y_0)$ lands on the origin, scale by the desired amount $s$, and then _undo_ the first shift to "put things back in place". Using our transformation matrices above, this ends up looking something like the following:
+
+$$
+\begin{bmatrix}
+x'\\y'\\0
+\end{bmatrix}
+=
+\underbrace{\begin{bmatrix}
+1 & 0 & x_0 \\ 0 & 1 & y_0 \\ 0 & 0 & 1
+\end{bmatrix}}_{\text{shift back}}
+\cdot
+\underbrace{\begin{bmatrix}
+s & 0 & 0 \\ 0 & s & 0 \\ 0 & 0 & 1
+\end{bmatrix}}_{\text{scale by } s}
+\cdot
+\underbrace{\begin{bmatrix}
+1 & 0 & -x_0 \\ 0 & 1 & -y_0 \\ 0 & 0 & 1
+\end{bmatrix}}_{\text{shift}}
+\cdot
+\begin{bmatrix}
+x\\y\\0
+\end{bmatrix}
+$$
+
+I don't recommend ever doing these computations by hand though. If you need to do some matrix multiplication to flesh out some linear transformation thinking, have [Wolfram Alpha](https://www.wolframalpha.com/) do the number and symbol crunching for you.
+
+Now that we've got some of this boring back-story out the way, let's look at a less-sophisticated, but perhaps more intuitive approach to these linear mappings.
+
+## An alternative perspective: Window Mapping
+
+For less sophisticated graphics work, I like to think in terms of "Window Mapping", where we map one "window" into another. By "window", I just mean a rectangular section of a 2D grid. Visually, my mental model looks something like the following:
+
+TODO: Diagram of what window-mapping looks like.
+
+We'll use some somewhat elementary (relative to linear algebra and matrix) primitives to think about this mapping. So first, a quick detour.
+
+### Transforming one dimension with linear functions
+
+You might hear the term "linear function" and think back to school days where you were graphing them in 2D space. However, 2D space is just the multiplicative juxtaposition of two separate 1D spaces – and we should actually think of linear functions in 2D as really just a mapping between two 1D spaces.
+
+As an example, let's say we have two number lines representing values for variables $x$ and $y$. We want to map a segment $[x_i,\: x_f]$ in the $x$-space to a segment $[y_i,\: y_f]$ in the $y$-space, as shown below.
+
+<OneDimensionalMapping client:visible />
+
+There's this ol' thing called the "point-slope form" for a linear function that says that if you want a linear mapping $f$ that maps $x_i \rightarrow y_i$ and $x_f \rightarrow y_f$ then that function looks something like this:
+
+$$
+f(x) = y_i + \frac{y_f - y_i}{x_f - x_i} \cdot (x - x_i)
+$$
+
+This is the bread and butter that maps our $x$-space to our $y$-space in our example above!
+
+The nice thing about this is: it's very easy to codify. Here's a little TypeScript function for this:
+
+```ts twoslash
+// linearly map a value x from [xi, xf] into [yi, yf]
+const linearMap = (
+  x: number,
+  xi: number,
+  xf: number,
+  yi: number,
+  yf: number,
+) => {
+  return yi + ((yf - yi) / (xf - xi)) * (x - xi);
+};
+```
+
+Okay, let's use this as our foundation for mapping 2D windows.
+
+### Transforming two dimensions
+
+We've mapped a 1D space into another using our handy point-slope form linear function. Let's move into two dimensions. The beautiful thing about 2D is that it's just two separate 1D spaces "multiplicatively combined".
