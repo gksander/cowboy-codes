@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { useEffect, useRef } from "preact/hooks";
 
 export function OneDimensionalMapping() {
-  const home = useRef(nanoid());
+  const home = useRef("el-" + nanoid());
   const isDark = useIsDarkMode();
 
   /**
@@ -174,13 +174,13 @@ export function OneDimensionalMapping() {
         "y",
       )} spaces that maps ${m("[x_i,\\: x_f]")} to ${m("[y_i,\\: y_f]")}.`}
     >
-      <div id={home.current} class="w-full aspect-[10/3]" />
+      <div id={home.current} class="w-full aspect-[10/3.5]" />
     </ExampleContainer>
   );
 }
 
 const W = 10;
-const H = 3;
+const H = 3.5;
 
 const H1 = 2.5;
 const H2 = 0.8;

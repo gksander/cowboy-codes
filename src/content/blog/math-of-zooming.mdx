@@ -1,0 +1,279 @@
+---
+title: "The math of zooming"
+description: "WIP"
+keywords:
+  - Math
+pubDate: "Aug 13 2023"
+hasMath: true
+draft: true
+---
+
+import { WindowMappingIntroDiagram } from "@components/posts/math-of-zooming/WindowMappingIntroDiagram";
+import { OneDimensionalMapping } from "@components/posts/math-of-zooming/OneDimensionalMapping";
+import { TwoDimensionalMapping } from "@components/posts/math-of-zooming/TwoDimensionalMapping";
+import { BadZooming } from "@components/posts/math-of-zooming/BadZooming";
+
+## Introduction
+
+Zooming and panning are a pretty common functionality in UI implementation. For example, it's not uncommon to be able to "zoom in" on an image on a web page or in a mobile app. There's one big thing to look out for when implementing zooming functionality though:
+
+> Zooming that doesn't preserve the focal point is a garbage experience.
+
+What I mean by this: if you have a zoom experience where the user uses their mouse wheel to zoom in, you expect the pixel underneath the mouse wheel to stay fixed as the user scrolls the wheel. I generally refer to this as "zooming while preserving focal point", and the illustration below will show you the difference between having this feature implemented vs not.
+
+<BadZooming client:visible />
+
+It turns out, implementing this functionality is not at all trivial and involves some math. In this blog post, I want to walk through a couple of approaches to making this happen.
+
+## What is "zooming"?
+
+The act of "zooming in" is really just a _scaling_ transformation. We scale our view up or down by some factor. Sounds pretty easy, right?
+
+Things get a bit tricky when it comes to preserving the focal point. When you scale, you generally scale "about the origin" – or the point $(0,\: 0)$ in whatever coordinate system you're working in. For example, in HTML5 Canvas, the origin is at the top-left corner of your canvas element – so a naive scaling will keep the top-left corner fixed and then scale up from there.
+
+This ends up being _not good enough_ if you're trying to preserve the focal point. So how the hell do we preserve the focal point when we scale?
+
+Preserving the focal point while scaling/zooming is a matter of _scaling about the focal point_. Scaling always happens about the "origin", so scaling about a point can be thought about in a three-step process:
+
+- Shift your whole view so that the focal point sits at the origin.
+- Then scale the view; the focal point is now at the visual origin so scaling happens about that focal point.
+- Then you need to shift your view back to undo the first shift.
+
+I like to visualize this like the following.
+
+TODO: Diagram of this...
+
+Let's look at some math that can help us with this three-step process.
+
+## The Linear Algebra approach
+
+Linear mappings between 2D (or 3D) grids are generally defined in terms of transformation matrices. A common practice is to represent a 2D point $(x, y)$ as the 3D vector:
+
+$$
+(x,y) \rightarrow
+\begin{bmatrix}
+x\\y\\0
+\end{bmatrix}
+$$
+
+where we set the third dimension ($z$) to 0. For reasons we won't cover here, in 2D graphics we generally work one dimension up and use 3D transformation matrices and "ignore" the $z$ dimension.
+
+Specific 3x3 matrices can then be used as linear mappings (or transformations), where left-multiplying the above 3D vector by the matrix will transform it:
+
+$$
+\begin{bmatrix}
+x' \\ y' \\ z'
+\end{bmatrix}
+=
+\begin{bmatrix}
+a&b&c\\ d&e&f \\ g&h&i
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+x\\y\\0
+\end{bmatrix}
+$$
+
+When applied to the entirety of the "input space", it will linearly map that space into a new one.
+
+For zooming and panning, we'll use translation and scaling transformations. To translate a space horizontally by $t_x$ and vertically by $t_y$, or scale by $s$, you can apply the following matrices:
+
+$$
+\underbrace{
+\begin{bmatrix}
+1 & 0 & t_x \\ 0 & 1 & t_y \\ 0 & 0 & 1
+\end{bmatrix}
+}_{\text{translate by } (t_x,\: t_y)}
+\qquad
+\underbrace{
+\begin{bmatrix}
+s_x & 0 & 0 \\ 0 & s_y & 0 \\ 0 & 0 & 1
+\end{bmatrix}
+}_{\text{scale by } s}
+$$
+
+You can also apply multiple transformation matrices – which is the mathematical magic that powers most graphics engines.
+
+In Cartesian space, scaling by default happens "about the origin". Recall that if we want to scale about a different point $(x_0, y_0)$ then we have to: translate (or shift) the view so that $(x_0, y_0)$ lands on the origin, scale by the desired amount $s$, and then _undo_ the first shift to "put things back in place". Using our transformation matrices above, this ends up looking something like the following (think of applying this transformations "right to left" when looking at them):
+
+$$
+\begin{aligned}
+\begin{bmatrix}
+x'\\y'\\0
+\end{bmatrix}
+&=
+\underbrace{\begin{bmatrix}
+1 & 0 & x_0 \\ 0 & 1 & y_0 \\ 0 & 0 & 1
+\end{bmatrix}}_{\text{shift back}}
+\cdot
+\underbrace{\begin{bmatrix}
+s & 0 & 0 \\ 0 & s & 0 \\ 0 & 0 & 1
+\end{bmatrix}}_{\text{scale by } s}
+\cdot
+\underbrace{\begin{bmatrix}
+1 & 0 & -x_0 \\ 0 & 1 & -y_0 \\ 0 & 0 & 1
+\end{bmatrix}}_{\text{shift}}
+\cdot
+\begin{bmatrix}
+x\\y\\0
+\end{bmatrix}
+\\
+\:\\
+&=
+\begin{bmatrix}
+s & 0 & x_0 \cdot (1 - s) \\
+0 & s & y_0 \cdot (1 - s) \\
+0 & 0 & 1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+x \\ y \\ 0
+\end{bmatrix}
+\\
+\:\\
+&=
+\begin{bmatrix}
+1 & 0 & x_0\cdot(1 - s) \\
+0 & 1 & y_0\cdot (1 - s) \\
+0 & 0 & 1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+s & 0 & 0 \\
+0 & s & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+x \\ y \\ 0
+\end{bmatrix}
+\end{aligned}
+$$
+
+I don't recommend ever doing these computations by hand. If you need to do some matrix multiplication to flesh out some linear transformation thinking, have [Wolfram Alpha](https://www.wolframalpha.com/) do the number and symbol crunching for you.
+
+If we look at the resulting transformation matrices above in the last line – and then look back to the shape of our translation and scaling matrices – you might notice that the last line here is actually the result of 1) scaling by $s$ and then 2) translating $x$ by $x_0\cdot (1 - s)$ and $y$ by $y_0 \cdot (1 - s)$.
+
+Taking a step back, this bar napkin math tells us that if you want to scale by $s$ about the point $(x_0,\: y_0)$ – but scaling happens about the origin $(0,\: 0)$ – then you can think of this as applying the following transformations:
+
+- First, scale the space by $s$.
+- Then, translate $x$ by $x_0\cdot (1 - s)$ and $y$ by $y_0 \cdot (1 - s)$.
+
+This is helpful for us, because if we want to "zoom in" while keeping the point $(x_0,\: y_0)$ in focus we can use the above two transformations. You can actually take this math, and implement it into your zooming context – and get a very nice "zoom while preserving focal point" experience. I'll leave that as an exercise, though.
+
+This linear algebra approach is powerful. But it's _complex_, and not intuitive to most. In the rest of this post, I'm going to walk through a less sophisticated, but hopefully more intuitive, approach to the sort of linear mapping we need in web and mobile graphics work.
+
+## An alternative approach to linear transformations: Window Mapping
+
+For less sophisticated graphics work, I like to think in terms of "Window Mapping", where we map one "window" into another. By "window", I just mean a rectangular section of a 2D grid. Visually, my mental model looks something like the following:
+
+<WindowMappingIntroDiagram />
+
+We'll use some somewhat elementary (relative to linear algebra and matrix) primitives to think about this mapping. So first, a quick detour.
+
+### Transforming one dimension with linear functions
+
+You might hear the term "linear function" and think back to school days where you were graphing them in 2D space. However, 2D space is just the multiplicative juxtaposition of two separate 1D spaces – and we should actually think of linear functions in 2D as really just a mapping between two 1D spaces.
+
+As an example, let's say we have two number lines representing values for variables $x$ and $y$. We want to map a segment $[x_i,\: x_f]$ in the $x$-space to a segment $[y_i,\: y_f]$ in the $y$-space, as shown below.
+
+<OneDimensionalMapping client:visible />
+
+There's this ol' thing called the "point-slope form" for a linear mapping that says that if you want a linear mapping $f$ that maps $x_i \rightarrow y_i$ and $x_f \rightarrow y_f$ then that function looks something like this:
+
+$$
+f(x) = y_i + \frac{y_f - y_i}{x_f - x_i} \cdot (x - x_i)
+$$
+
+This is the bread and butter that maps our $x$-space to our $y$-space in our example above!
+
+The nice thing about this is: it's very easy to codify. Here's a little TypeScript function for this:
+
+```ts twoslash
+// linearly map a value x from [xi, xf] into [yi, yf]
+const linearMap = (
+  x: number,
+  xi: number,
+  xf: number,
+  yi: number,
+  yf: number,
+) => {
+  return yi + ((yf - yi) / (xf - xi)) * (x - xi);
+};
+```
+
+Okay, let's use this as our foundation for mapping 2D windows.
+
+### Transforming two dimensions
+
+We've mapped a 1D space into another using our handy point-slope form linear function. Let's move into two dimensions. The beautiful thing about 2D is that it's just two separate 1D spaces "multiplicatively combined".
+
+This means that if we want to map an input window in one 2D space to an output window in another 2D space, we can do so by mapping the horizontal and vertical components separately using our 1D techniques from above (using a linear function in point-slope form) so that each side of the input window maps to the respective side on the output window. This is illustrated below.
+
+<TwoDimensionalMapping client:visible />
+
+In our illustration above, if the horizontal blue segment on the input window is from $(x_i,\: x_f)$ and maps onto $(x_i',\: x_f')$ in the output space, and the vertical red segment on the input window is from $(y_i,\: y_f)$ and maps onto $(y_i',\: y_f')$ in the output space, then we have a horizontal and vertical mapping functions that look like:
+
+$$
+f_x(x) = x_i + \frac{x_f' - x_i'}{x_f - x_i} \cdot (x - x_i) \\ \: \\
+f_y(y) = y_i + \frac{y_f' - y_i'}{y_f - y_i} \cdot (y - y_i)
+$$
+
+We can put this in code. We'll use a `ViewWindow` TypeScript type to represent our "windows" by defining the minimum and maximum $x$ and $y$ values for our window, and a `Point` type to represent a point in 2D space. Then, we can put our `linearMap` function from above to handle our 2D mapping.
+
+```ts twoslash
+type Point = { x: number; y: number };
+
+type ViewWindow = {
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+};
+
+/**
+ * Maps one 2D space to another such that
+ *  inputWindow maps into outputWindow
+ */
+const mapPoint = (
+  point: Point,
+  inputWindow: ViewWindow,
+  outputWindow: ViewWindow,
+) => {
+  return {
+    // map in the x-direction
+    x: linearMap(
+      point.x,
+      inputWindow.xMin,
+      inputWindow.xMax,
+      outputWindow.xMin,
+      outputWindow.xMax,
+    ),
+    // map in the y-direction
+    y: linearMap(
+      point.y,
+      inputWindow.yMin,
+      inputWindow.yMax,
+      outputWindow.yMin,
+      outputWindow.yMax,
+    ),
+  };
+};
+
+// The function we wrote before
+const linearMap = (
+  x: number,
+  xi: number,
+  xf: number,
+  yi: number,
+  yf: number,
+) => {
+  return yi + ((yf - yi) / (xf - xi)) * (x - xi);
+};
+```
+
+Now we've got a function that can help us map between two view windows. Let's put it to use to implement a zoom/panning feature!
+
+## Using Window Mapping to implement Zooming
+
+TODO: An actual example of using this...
