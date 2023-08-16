@@ -1,5 +1,5 @@
 ---
-title: "The math of zooming"
+title: "The math of zooming in"
 description: "WIP"
 keywords:
   - Math
@@ -12,6 +12,7 @@ import { WindowMappingIntroDiagram } from "@components/posts/math-of-zooming/Win
 import { OneDimensionalMapping } from "@components/posts/math-of-zooming/OneDimensionalMapping";
 import { TwoDimensionalMapping } from "@components/posts/math-of-zooming/TwoDimensionalMapping";
 import { BadZooming } from "@components/posts/math-of-zooming/BadZooming";
+import { CanvasZooming } from "@components/posts/math-of-zooming/CanvasZooming";
 
 ## Introduction
 
@@ -25,11 +26,11 @@ What I mean by this: if you have a zoom experience where the user uses their mou
 
 It turns out, implementing this functionality is not at all trivial and involves some math. In this blog post, I want to walk through a couple of approaches to making this happen.
 
-## What is "zooming"?
+## What is "zooming in"?
 
 The act of "zooming in" is really just a _scaling_ transformation. We scale our view up or down by some factor. Sounds pretty easy, right?
 
-Things get a bit tricky when it comes to preserving the focal point. When you scale, you generally scale "about the origin" – or the point $(0,\: 0)$ in whatever coordinate system you're working in. For example, in HTML5 Canvas, the origin is at the top-left corner of your canvas element – so a naive scaling will keep the top-left corner fixed and then scale up from there.
+Things get a bit tricky when it comes to preserving the focal point. When you scale, you generally scale "about the origin" – or the point $(0,\: 0)$ in whatever coordinate system you're working in. For example, in HTML5 Canvas, the origin is at the top-left corner of your canvas element – so a naive scaling will keep the top-left corner fixed and then scale the view from there.
 
 This ends up being _not good enough_ if you're trying to preserve the focal point. So how the hell do we preserve the focal point when we scale?
 
@@ -76,7 +77,7 @@ $$
 
 When applied to the entirety of the "input space", it will linearly map that space into a new one.
 
-For zooming and panning, we'll use translation and scaling transformations. To translate a space horizontally by $t_x$ and vertically by $t_y$, or scale by $s$, you can apply the following matrices:
+For zooming and panning, we'll use translation and scaling transformations, respectively. To translate a space horizontally by $t_x$ and vertically by $t_y$, or scale by $s$, you can apply the following matrices:
 
 $$
 \underbrace{
@@ -274,6 +275,178 @@ const linearMap = (
 
 Now we've got a function that can help us map between two view windows. Let's put it to use to implement a zoom/panning feature!
 
-## Using Window Mapping to implement Zooming
+## Using Window Mapping to implement "zooming in"
 
-TODO: An actual example of using this...
+So how do we use "window mapping" to implement a "zooming in" feature? Let's say you have somme sort of 300px x 300px canvas drawing, and you'd like to implement a "zooming in" feature on it. I like to break this down into three main pieces:
+
+- You're always drawing onto your `<canvas />` element's context, and we generally want to fill that whole space. So we'll consider our "output window" the entire 300px x 300px viewable portion of our `<canvas />`.
+- We'll consider our original 300px x 300px canvas drawing as our input _space_. This is where our input window will "live".
+- We'll then create an "input window" inside of our input space that is our "lens" into the drawing.
+
+This is illustrated below.
+
+TODO: Diagram mapping out the above.
+
+With this mental model, the act of "zooming in" (and "zooming out") is really just a matter of shrinking or expanding our input window! If we keep our output window fixed, but shrink our input window – we're using the same output space to view a smaller portion of our drawing. That's "zooming in"!
+
+TODO: Do we add a JXG illustration where they can shrink/grow the input window?
+
+Let's actually write some code to implement this in an HTML5 canvas environment! We'll implement the following interaction.
+
+<CanvasZooming client:visible />
+
+### Drawing a heart in Cartesian space
+
+We're going to draw a heart, but we're going to lean on some math to do it. We can draw a heart using a parameterized curve where a parameter $0 \le t \le 2\pi$ and:
+
+$$
+\begin{aligned}
+x &= 16\sin^3(t) \\
+y &= 13 \cos(t) - 5\cos(2t) - 2\cos(3t) - \cos(4t)
+\end{aligned}
+$$
+
+We'll define a TypeScript function `heart` to do this computation for us:
+
+```ts
+const heart = (t: number): Point => ({
+  x: 16 * Math.pow(Math.sin(t), 3),
+  y:
+    13 * Math.cos(t) -
+    5 * Math.cos(2 * t) -
+    2 * Math.cos(3 * t) -
+    Math.cos(4 * t),
+});
+```
+
+The caveat with this function is: it draws a heart in _Cartesian space_ and spans the window $[-16,\: 16] \times [-13,\: 13]$. Recall that Cartesian space and Canvas drawing space are different in suble ways, but both are 2D grids so we can still easily map between the two.
+
+### Drawing the heart on the canvas
+
+Let's draw this heart onto a canvas. I'm using Preact, but the setup is pretty similar regardless of your frontend tooling. We'll need an HTML canvas element to draw on:
+
+```tsx twoslash {4}
+// @noErrors
+// Define the size of our canvas
+const SIZE = 300;
+// ...
+<canvas width={SIZE} height={SIZE} />;
+```
+
+With a `<canvas />` element for us to draw on, we'll do some setup to draw. I'll omit some details here, but we're going to use some standard canvas drawing techniques – as well as our window mapping utilities (like `mapPoint`) we created earlier.
+
+```ts twoslash {8-26, 40-42}
+// @noErrors
+
+const SIZE = 300;
+
+// Get your canvas ref
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
+
+// We'll define our input and output windows
+const startingInputWindow: ViewWindow = {
+  xMin: -18,
+  xMax: 18,
+  yMin: -18,
+  yMax: 18,
+};
+const inputWindow = Object.assign({}, startingInputWindow);
+/**
+ * Notice how the y's are flipped! This is because Cartesian/canvas
+ *  differences, where we want to map e.g. -18 in Cartesian
+ *  to the bottom of the canvas window, etc.
+ */
+const outputWindow: ViewWindow = {
+  xMin: 0,
+  xMax: SIZE,
+  yMin: SIZE,
+  yMax: 0,
+};
+
+// Our drawing function
+const draw = () => {
+  ctx.clearRect(0, 0, SIZE, SIZE);
+
+  ctx.fillStyle = "red";
+  ctx.lineWidth = 5;
+
+  // Drawing logic for the heart.
+  ctx.beginPath();
+  let pt = mapPoint(heart(0), inputWindow, outputWindow);
+  ctx.moveTo(pt.x, pt.y);
+  for (let t = 0; t < 2 * Math.PI; t += 0.01) {
+    // Map heart point from Cartesian to our canvas
+    pt = mapPoint(heart(t), inputWindow, outputWindow);
+    ctx.lineTo(pt.x, pt.y);
+  }
+  ctx.stroke();
+  ctx.fill();
+};
+
+draw();
+```
+
+In the code above, notice how we've got the `inputWindow` and `outputWindow`s set up. We'll use these to map our heart points from Cartesian space into Canvas space. The important piece of transformation code is the `mapPoint(heart(t), inputWindow, outputWindow)` which takes a point `heart(t)` in Cartesian space (our `inputWindow`) and maps it into canvas coordinates (our `outputWindow`).
+
+This draws a pretty little heart, but it's static. Let's work on zooming in.
+
+### Mouse wheel logic to zoom in
+
+To support zooming in (with focal point preservation), we'll add a `mousewheel` event on the canvas. Whenever the mousewheel event fires, we'll adjust our `inputWindow` accordingly; if you scroll down, we expand the input window to "zoom out", and if you scroll up we shrink the input window to "zoom in".
+
+To preserve the focal point, we'll take into account _where_ the wheel event occurs (e.g. where your pointer is when you scroll) and shrink/expand our input window accordingly – as to preserve the focal point (the pointer position).
+
+Omitting some of the code from the above snippet, our wheel handler looks something like the following.
+
+```ts twoslash {4-9, 11-16, 22-27}
+// @noErrors
+canvas.addEventListener("wheel", (e) => {
+  e.preventDefault();
+
+  // _Input_ coordinates where mousewheel occurred
+  const { x, y } = mapPoint(
+    { x: e.offsetX, y: e.offsetY },
+    outputWindow,
+    inputWindow,
+  );
+
+  // What percentage away from the bottom-left of the input window
+  //  was the wheel event registered at?
+  const hitPercentX =
+    (x - inputWindow.xMin) / (inputWindow.xMax - inputWindow.xMin);
+  const hitPercentY =
+    (y - inputWindow.yMin) / (inputWindow.yMax - inputWindow.yMin);
+
+  // How much wider/taller we should make the input window.
+  const deltaW = e.deltaY / 20;
+  const deltaH = e.deltaY / 20;
+
+  // Expand x p_x% to left and (1 - p_x)% to the right,
+  // Expand y p_y% down and (1 - p_y)% up.
+  inputWindow.xMin -= hitPercentX * deltaW;
+  inputWindow.xMax += (1 - hitPercentX) * deltaW;
+  inputWindow.yMin -= hitPercentY * deltaH;
+  inputWindow.yMax += (1 - hitPercentY) * deltaH;
+
+  // Trigger re-draw with new input window.
+  draw();
+});
+```
+
+The "hard" part of the math with this approach is highlighted above, but the mental model isn't overly complicated:
+
+- On mousewheel, determine what percentage the pointer is from the x-minimum bound of the input window. Call this percentage $X\%$
+- Assume you want to grow/shrink the input window width by $\Delta W$ units.
+- Then remove $X\% \cdot \Delta W$ from the minimum x-bound for the input window and add $(1 - X\%) \cdot \Delta W$ to the maximum x-bound for the input window.
+- Do the same thing for the y-bounds.
+
+Once again, the end result gives you something like the following.
+
+<CanvasZooming client:visible />
+
+## What next?
+
+In this post, we looked at the math behind "zooming in while preserving focal point". We looked at a (somewhat bording) Linear Algebra approach using matrices, and introduced a perhaps fresh perspective: linear window mapping.
+
+We only looked at zooming/scaling here, but if you're looking to implement a click-to-drag feature alongside your zooming experience, the logic looks very similar! As the user drags their mouse, you merely _move_ the input window according to the user's mouse position!
