@@ -31,7 +31,7 @@ export function BadZooming() {
         if (!(e instanceof WheelEvent)) return;
         e.preventDefault();
 
-        e.deltaY < 0 ? board1.zoomIn(0, 0) : board1.zoomOut(0, 0);
+        e.deltaY < 0 ? board1.zoomIn(0, SIZE) : board1.zoomOut(0, SIZE);
       });
     document
       .querySelector("#" + input.current)

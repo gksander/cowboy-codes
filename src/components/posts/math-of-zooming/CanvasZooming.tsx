@@ -95,7 +95,7 @@ export function CanvasZooming() {
   return (
     <ExampleContainer
       title={`"Zooming in" using window mapping`}
-      instructions="Use your mousewheel to scroll on the heart, and notice how it zooms while preserving focal point. Click on the canvas to reset the zoom."
+      instructions="Use your mouse wheel to scroll on the heart, and notice how it zooms while preserving focal point. Click on the canvas to reset the zoom."
     >
       <div class="flex justify-center">
         <canvas

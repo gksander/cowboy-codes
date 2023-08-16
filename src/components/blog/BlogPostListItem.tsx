@@ -6,17 +6,19 @@ export function BlogPostListItem({ slug, data }: CollectionEntry<"blog">) {
   return (
     <div class="flex flex-col">
       <div class="mb-3">
-        <OptimizedImage
-          image={{
-            src: [`/og/blog/${slug}.avif`, `/og/blog/${slug}.jpeg`],
-            attributes: {
-              width: OG_WIDTH,
-              height: OG_HEIGHT,
-            },
-          }}
-          alt={`Cover image for ${data.title}`}
-          class="rounded-md"
-        />
+        <a href={`/blog/${slug}`} class="block group">
+          <OptimizedImage
+            image={{
+              src: [`/og/blog/${slug}.avif`, `/og/blog/${slug}.jpeg`],
+              attributes: {
+                width: OG_WIDTH,
+                height: OG_HEIGHT,
+              },
+            }}
+            alt={`Cover image for ${data.title}`}
+            class="rounded group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-150"
+          />
+        </a>
       </div>
       <div class="flex-1 flex flex-col">
         <a
@@ -38,14 +40,3 @@ export function BlogPostListItem({ slug, data }: CollectionEntry<"blog">) {
 
 const OG_WIDTH = 1200;
 const OG_HEIGHT = 627;
-
-/**
- * <CarouselItem
-            title={post.data.title}
-            description={post.data.description}
-            subsubtitle={format(post.data.pubDate, "MMMM d, yyyy")}
-            href={`/blog/${post.slug}`}
-            isInternalLink={true}
-            shouldWrapTitle={true}
-          />
- */

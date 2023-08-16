@@ -1,11 +1,20 @@
 ---
 title: "The math of zooming in"
-description: "WIP"
+description: "The UI math of zooming in while preserving focal point, covering a Linear Algebra approach as well as a more intuitive approach of window mapping."
 keywords:
   - Math
-pubDate: "Aug 13 2023"
+  - Canvas
+  - HTML5
+  - Linear Algebra
+  - Linear Transformations
+  - Zooming in
+  - TypeScript
+pubDate: "Aug 16 2023"
 hasMath: true
-draft: true
+ogConfig:
+  featureImagePath: "posts/math-of-zoom/og.png"
+  featureImageFullBleed: false
+  featureImageWidth: 700
 ---
 
 import { WindowMappingIntroDiagram } from "@components/posts/math-of-zooming/WindowMappingIntroDiagram";
@@ -13,10 +22,12 @@ import { OneDimensionalMapping } from "@components/posts/math-of-zooming/OneDime
 import { TwoDimensionalMapping } from "@components/posts/math-of-zooming/TwoDimensionalMapping";
 import { BadZooming } from "@components/posts/math-of-zooming/BadZooming";
 import { CanvasZooming } from "@components/posts/math-of-zooming/CanvasZooming";
+import { ShiftAndScaleDiagram } from "@components/posts/math-of-zooming/ShiftAndScaleDiagram";
+import { CanvasWindowDiagram } from "@components/posts/math-of-zooming/CanvasWindowDiagram";
 
 ## Introduction
 
-Zooming and panning are a pretty common functionality in UI implementation. For example, it's not uncommon to be able to "zoom in" on an image on a web page or in a mobile app. There's one big thing to look out for when implementing zooming functionality though:
+Zooming and panning are a pretty common functionality in UI implementation. For example, it's not uncommon to be able to "zoom in" on an image or a graph on a web page or in a mobile app. There's one big thing to look out for when implementing zooming functionality though:
 
 > Zooming that doesn't preserve the focal point is a garbage experience.
 
@@ -34,7 +45,7 @@ Things get a bit tricky when it comes to preserving the focal point. When you sc
 
 This ends up being _not good enough_ if you're trying to preserve the focal point. So how the hell do we preserve the focal point when we scale?
 
-Preserving the focal point while scaling/zooming is a matter of _scaling about the focal point_. Scaling always happens about the "origin", so scaling about a point can be thought about in a three-step process:
+Preserving the focal point while scaling/zooming is a matter of _scaling about the focal point_. Scaling typically happens about the "origin", so scaling about a point can be thought about in a three-step process:
 
 - Shift your whole view so that the focal point sits at the origin.
 - Then scale the view; the focal point is now at the visual origin so scaling happens about that focal point.
@@ -42,7 +53,7 @@ Preserving the focal point while scaling/zooming is a matter of _scaling about t
 
 I like to visualize this like the following.
 
-TODO: Diagram of this...
+<ShiftAndScaleDiagram />
 
 Let's look at some math that can help us with this three-step process.
 
@@ -77,7 +88,7 @@ $$
 
 When applied to the entirety of the "input space", it will linearly map that space into a new one.
 
-For zooming and panning, we'll use translation and scaling transformations, respectively. To translate a space horizontally by $t_x$ and vertically by $t_y$, or scale by $s$, you can apply the following matrices:
+For panning and zooming, we use translation and scaling transformations, respectively. To translate a space horizontally by $t_x$ and vertically by $t_y$, or scale by $s$, you can apply the following matrices:
 
 $$
 \underbrace{
@@ -88,14 +99,14 @@ $$
 \qquad
 \underbrace{
 \begin{bmatrix}
-s_x & 0 & 0 \\ 0 & s_y & 0 \\ 0 & 0 & 1
+s & 0 & 0 \\ 0 & s & 0 \\ 0 & 0 & 1
 \end{bmatrix}
 }_{\text{scale by } s}
 $$
 
 You can also apply multiple transformation matrices – which is the mathematical magic that powers most graphics engines.
 
-In Cartesian space, scaling by default happens "about the origin". Recall that if we want to scale about a different point $(x_0, y_0)$ then we have to: translate (or shift) the view so that $(x_0, y_0)$ lands on the origin, scale by the desired amount $s$, and then _undo_ the first shift to "put things back in place". Using our transformation matrices above, this ends up looking something like the following (think of applying this transformations "right to left" when looking at them):
+In Cartesian space, scaling by default happens "about the origin". Recall that if we want to scale about a different point $(x_0, y_0)$ then we have to: translate (or shift) the view so that $(x_0, y_0)$ lands on the origin, scale by the desired amount $s$, and then _undo_ the first shift to "put things back in place". Using our transformation matrices above, this ends up looking something like the following (think of applying these transformations "right to left" when looking at them):
 
 $$
 \begin{aligned}
@@ -133,17 +144,21 @@ x \\ y \\ 0
 \\
 \:\\
 &=
+\underbrace{
 \begin{bmatrix}
 1 & 0 & x_0\cdot(1 - s) \\
 0 & 1 & y_0\cdot (1 - s) \\
 0 & 0 & 1
 \end{bmatrix}
+}_{\text{translate by }x_0\cdot(1-s),\: y_0\cdot(1-s)}
 \cdot
+\underbrace{
 \begin{bmatrix}
 s & 0 & 0 \\
 0 & s & 0 \\
 0 & 0 & 1
 \end{bmatrix}
+}_{\text{scale by }s}
 \cdot
 \begin{bmatrix}
 x \\ y \\ 0
@@ -164,7 +179,7 @@ This is helpful for us, because if we want to "zoom in" while keeping the point 
 
 This linear algebra approach is powerful. But it's _complex_, and not intuitive to most. In the rest of this post, I'm going to walk through a less sophisticated, but hopefully more intuitive, approach to the sort of linear mapping we need in web and mobile graphics work.
 
-## An alternative approach to linear transformations: Window Mapping
+## An alternative approach to matrix transformations: Window Mapping
 
 For less sophisticated graphics work, I like to think in terms of "Window Mapping", where we map one "window" into another. By "window", I just mean a rectangular section of a 2D grid. Visually, my mental model looks something like the following:
 
@@ -277,7 +292,7 @@ Now we've got a function that can help us map between two view windows. Let's pu
 
 ## Using Window Mapping to implement "zooming in"
 
-So how do we use "window mapping" to implement a "zooming in" feature? Let's say you have somme sort of 300px x 300px canvas drawing, and you'd like to implement a "zooming in" feature on it. I like to break this down into three main pieces:
+So how do we use "window mapping" to implement a "zooming in" feature? Let's say you have some sort of 300px x 300px canvas drawing, and you'd like to implement a "zooming in" feature on it. I like to break this down into three main pieces:
 
 - You're always drawing onto your `<canvas />` element's context, and we generally want to fill that whole space. So we'll consider our "output window" the entire 300px x 300px viewable portion of our `<canvas />`.
 - We'll consider our original 300px x 300px canvas drawing as our input _space_. This is where our input window will "live".
@@ -285,11 +300,9 @@ So how do we use "window mapping" to implement a "zooming in" feature? Let's say
 
 This is illustrated below.
 
-TODO: Diagram mapping out the above.
+<CanvasWindowDiagram />
 
 With this mental model, the act of "zooming in" (and "zooming out") is really just a matter of shrinking or expanding our input window! If we keep our output window fixed, but shrink our input window – we're using the same output space to view a smaller portion of our drawing. That's "zooming in"!
-
-TODO: Do we add a JXG illustration where they can shrink/grow the input window?
 
 Let's actually write some code to implement this in an HTML5 canvas environment! We'll implement the following interaction.
 
@@ -335,7 +348,7 @@ const SIZE = 300;
 
 With a `<canvas />` element for us to draw on, we'll do some setup to draw. I'll omit some details here, but we're going to use some standard canvas drawing techniques – as well as our window mapping utilities (like `mapPoint`) we created earlier.
 
-```ts twoslash {8-26, 40-42}
+```ts twoslash {8-25, 39-41}
 // @noErrors
 
 const SIZE = 300;
@@ -345,13 +358,12 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
 // We'll define our input and output windows
-const startingInputWindow: ViewWindow = {
+const inputWindow: ViewWindow = {
   xMin: -18,
   xMax: 18,
   yMin: -18,
   yMax: 18,
 };
-const inputWindow = Object.assign({}, startingInputWindow);
 /**
  * Notice how the y's are flipped! This is because Cartesian/canvas
  *  differences, where we want to map e.g. -18 in Cartesian
@@ -441,6 +453,8 @@ The "hard" part of the math with this approach is highlighted above, but the men
 - Then remove $X\% \cdot \Delta W$ from the minimum x-bound for the input window and add $(1 - X\%) \cdot \Delta W$ to the maximum x-bound for the input window.
 - Do the same thing for the y-bounds.
 
+This logic keeps our focal point in the same _relative_ position as we zoom.
+
 Once again, the end result gives you something like the following.
 
 <CanvasZooming client:visible />
@@ -450,3 +464,5 @@ Once again, the end result gives you something like the following.
 In this post, we looked at the math behind "zooming in while preserving focal point". We looked at a (somewhat bording) Linear Algebra approach using matrices, and introduced a perhaps fresh perspective: linear window mapping.
 
 We only looked at zooming/scaling here, but if you're looking to implement a click-to-drag feature alongside your zooming experience, the logic looks very similar! As the user drags their mouse, you merely _move_ the input window according to the user's mouse position!
+
+Any given workflow is going to have its own caveats, and require some logic around the edges – but I think this idea of "window mapping" works very well for any sort of panning or zooming that you might need to support (be it HTML5 Canvas, interactions in React Native, or something entirely different).
