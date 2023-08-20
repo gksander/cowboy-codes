@@ -231,8 +231,8 @@ This means that if we want to map an input window in one 2D space to an output w
 In our illustration above, if the horizontal blue segment on the input window is from $(x_i,\: x_f)$ and maps onto $(x_i',\: x_f')$ in the output space, and the vertical red segment on the input window is from $(y_i,\: y_f)$ and maps onto $(y_i',\: y_f')$ in the output space, then we have a horizontal and vertical mapping functions that look like:
 
 $$
-f_x(x) = x_i + \frac{x_f' - x_i'}{x_f - x_i} \cdot (x - x_i) \\ \: \\
-f_y(y) = y_i + \frac{y_f' - y_i'}{y_f - y_i} \cdot (y - y_i)
+f_x(x) = x_i' + \frac{x_f' - x_i'}{x_f - x_i} \cdot (x - x_i) \\ \: \\
+f_y(y) = y_i' + \frac{y_f' - y_i'}{y_f - y_i} \cdot (y - y_i)
 $$
 
 We can put this in code. We'll use a `ViewWindow` TypeScript type to represent our "windows" by defining the minimum and maximum $x$ and $y$ values for our window, and a `Point` type to represent a point in 2D space. Then, we can put our `linearMap` function from above to handle our 2D mapping.

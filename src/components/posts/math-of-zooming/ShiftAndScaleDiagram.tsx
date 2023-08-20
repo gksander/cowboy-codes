@@ -5,7 +5,7 @@ export function ShiftAndScaleDiagram() {
     <SimpleImageContainer>
       <svg
         width="654"
-        height="607"
+        class="w-full"
         viewBox="0 0 654 607"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

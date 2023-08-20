@@ -5,7 +5,7 @@ export function CanvasWindowDiagram() {
     <SimpleImageContainer>
       <svg
         width="544"
-        height="243"
+        class="w-full"
         viewBox="0 0 544 243"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

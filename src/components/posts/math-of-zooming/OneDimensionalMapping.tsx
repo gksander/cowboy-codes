@@ -22,6 +22,7 @@ export function OneDimensionalMapping() {
       showCopyright: false,
       showInfobox: false,
       showNavigation: false,
+      pan: { enabled: false },
     });
 
     const ax1 = board.create(
@@ -174,13 +175,13 @@ export function OneDimensionalMapping() {
         "y",
       )} spaces that maps ${m("[x_i,\\: x_f]")} to ${m("[y_i,\\: y_f]")}.`}
     >
-      <div id={home.current} class="w-full aspect-[10/3.5]" />
+      <div id={home.current} class="w-full aspect-[10/4]" />
     </ExampleContainer>
   );
 }
 
 const W = 10;
-const H = 3.5;
+const H = 4;
 
-const H1 = 2.5;
-const H2 = 0.8;
+const H1 = 3;
+const H2 = 1.1;

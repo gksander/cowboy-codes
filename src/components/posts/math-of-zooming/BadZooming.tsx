@@ -23,6 +23,7 @@ export function BadZooming() {
         max: 10,
         wheel: false,
       },
+      pan: { enabled: false },
     });
 
     document

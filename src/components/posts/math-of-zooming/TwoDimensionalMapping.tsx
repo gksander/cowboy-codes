@@ -20,6 +20,7 @@ export function TwoDimensionalMapping() {
       showCopyright: false,
       showInfobox: false,
       showNavigation: false,
+      pan: { enabled: false },
     });
     const board2 = window.JXG.JSXGraph.initBoard(output.current, {
       boundingBox: [0, SIZE, SIZE, 0],

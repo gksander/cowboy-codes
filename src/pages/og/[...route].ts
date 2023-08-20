@@ -116,11 +116,14 @@ async function drawOGImage({
   ctx.fillText(title, PADDING, PADDING, 0.9 * WIDTH);
 
   // Publication date
-  ctx.font = `36pt 'Montserrat Thin'`;
+  ctx.font = `20pt 'Montserrat Thin'`;
   ctx.textAlign = "left";
   ctx.textBaseline = "bottom";
   ctx.fillStyle = isLight ? colors.gray["800"] : colors.gray["300"];
   ctx.fillText(format(pubDate, "MMMM yyyy"), PADDING, HEIGHT - PADDING);
+  // And author name
+  ctx.font = `48px 'Montserrat Thin'`;
+  ctx.fillText("Grant Sander", PADDING, HEIGHT - PADDING - 36);
 
   return canvas.toBuffer("jpeg", { density: 1 });
 }
