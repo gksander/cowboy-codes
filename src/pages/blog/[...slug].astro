@@ -26,10 +26,10 @@ const { Content, headings } = await post.render();
 ---
 
 <DefaultLayout
-  title={post.data.title}
+  title={`${post.data.title} | Grant Sander`}
   description={post.data.metaDescription || post.data.description}
   keywords={post.data.keywords}
-  image={`/og/blog/${post.slug}.png`}
+  image={`/og/blog/${post.slug}.jpeg`}
   isFat={true}
   hasKatex={post.data.hasMath}
 >

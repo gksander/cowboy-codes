@@ -17,6 +17,7 @@ const blog = defineCollection({
       .optional()
       .transform((str) => (str ? new Date(str) : undefined)),
     heroImage: z.string().optional(),
+    draft: z.boolean().optional().default(false),
 
     // Whether or not to load Katex
     hasMath: z.boolean().optional().default(false),

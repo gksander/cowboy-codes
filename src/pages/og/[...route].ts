@@ -4,6 +4,7 @@ import colors from "../../../scripts/tw-colors.json";
 import { format } from "date-fns";
 import type { CollectionEntry } from "astro:content";
 import { Canvas, FontLibrary, loadImage } from "skia-canvas";
+import sharp from "sharp";
 
 type BlogData = CollectionEntry<"blog">["data"];
 
@@ -23,21 +24,34 @@ const pages = Object.entries(rawPages).reduce<Record<string, BlogData>>(
   {},
 );
 
+type Ext = ".avif" | ".jpeg";
+
 export async function getStaticPaths() {
-  return Object.entries(pages).map(([p, page]) => ({
-    params: { route: p.replace(path.extname(p), "") + ".png" },
-    props: page,
-  }));
+  const makeEntries = (ext: Ext) =>
+    Object.entries(pages).map(([p, page]) => ({
+      params: { route: p.replace(path.extname(p), "") + ext },
+      props: { ...page, ext },
+    }));
+
+  return [...makeEntries(".jpeg"), ...makeEntries(".avif")];
 }
 
-export async function get({ props }: { props: BlogData }) {
-  return {
-    body: await drawOGImage({
-      title: props.title,
-      pubDate: new Date(props.pubDate),
-      ogConfig: props?.ogConfig,
-    }),
-  };
+export async function get({ props }: { props: BlogData & { ext: Ext } }) {
+  let img = await drawOGImage({
+    title: props.title,
+    pubDate: new Date(props.pubDate),
+    ogConfig: props?.ogConfig,
+  });
+
+  if (props.ext === ".avif") {
+    img = await sharp(img).avif().toBuffer();
+  }
+
+  return new Response(img, {
+    headers: {
+      "content-type": `image/${props.ext.slice(1)}`,
+    },
+  });
 }
 
 FontLibrary.use(
@@ -53,6 +67,7 @@ async function drawOGImage({
   title: string;
   pubDate: Date;
   ogConfig?: BlogData["ogConfig"];
+  isPng?: boolean;
 }) {
   // Input massage
   const isLight = ogConfig?.colorMode === "light";
@@ -92,20 +107,23 @@ async function drawOGImage({
   );
 
   // Title
-  const titleFontSize = ogConfig?.titleFontSize || 75;
+  const titleFontSize = ogConfig?.titleFontSize || 64;
   ctx.font = `${titleFontSize}pt 'Montserrat Thin'`;
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
   ctx.fillStyle = isLight ? colors.gray["900"] : colors.white;
   ctx.textWrap = true;
-  ctx.fillText(title, PADDING, PADDING, 0.85 * WIDTH);
+  ctx.fillText(title, PADDING, PADDING, 0.9 * WIDTH);
 
   // Publication date
-  ctx.font = `${0.5 * titleFontSize}pt 'Montserrat Thin'`;
+  ctx.font = `20pt 'Montserrat Thin'`;
   ctx.textAlign = "left";
   ctx.textBaseline = "bottom";
   ctx.fillStyle = isLight ? colors.gray["800"] : colors.gray["300"];
   ctx.fillText(format(pubDate, "MMMM yyyy"), PADDING, HEIGHT - PADDING);
+  // And author name
+  ctx.font = `48px 'Montserrat Thin'`;
+  ctx.fillText("Grant Sander", PADDING, HEIGHT - PADDING - 36);
 
-  return canvas.toBuffer("png", { density: 2 });
+  return canvas.toBuffer("jpeg", { density: 1 });
 }

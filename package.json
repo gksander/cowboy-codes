@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.19.7",
@@ -18,12 +19,15 @@
     "@astrojs/svelte": "^3.1.0",
     "@astrojs/tailwind": "^4.0.0",
     "@fontsource-variable/jetbrains-mono": "^5.0.8",
+    "@preact/signals": "^1.2.0",
     "astro": "^2.10.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "image-size": "^1.0.2",
     "markdown-it": "^13.0.1",
+    "nanoid": "^4.0.2",
     "preact": "^10.6.5",
+    "react-dynamic-geometry": "^0.0.10",
     "remark-shiki-twoslash": "^3.1.3",
     "remark-toc": "^8.0.1",
     "remark-unwrap-images": "^3.0.1",
@@ -37,6 +41,7 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^20.4.7",
+    "@types/sharp": "^0.32.0",
     "prettier": "^3.0.1",
     "prettier-plugin-astro": "^0.11.0",
     "rehype-autolink-headings": "^6.1.1",
