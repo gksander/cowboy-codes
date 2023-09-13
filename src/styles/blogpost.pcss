@@ -91,9 +91,12 @@ pre.shiki {
       @apply leading-relaxed;
     }
 
-    & div.highlight {
-      @apply bg-secondary-100 dark:bg-secondary-900 min-w-fit;
+    & div.dim {
+      @apply opacity-60;
     }
+    /* & div.highlight {
+      @apply bg-secondary-100 dark:bg-secondary-900 min-w-fit;
+    } */
 
     & .line::before {
       content: counter(step);

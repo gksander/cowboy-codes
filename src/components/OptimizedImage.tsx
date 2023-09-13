@@ -6,12 +6,14 @@ export function OptimizedImage({
   class: className,
   id,
   isHighPriority,
+  ignoreAspectRatio,
 }: {
   image: OptimizedImageDetails;
   alt: string;
   class?: string;
   id?: string;
   isHighPriority?: boolean;
+  ignoreAspectRatio?: boolean;
 }) {
   const avifSrc = image.src.find(
     (img) => img.includes(".avif") || img.includes("f=avif"),
@@ -30,7 +32,9 @@ export function OptimizedImage({
         alt={alt}
         class={className}
         style={{
-          aspectRatio: `${image.attributes.width} / ${image.attributes.height}`,
+          aspectRatio: ignoreAspectRatio
+            ? undefined
+            : `${image.attributes.width} / ${image.attributes.height}`,
         }}
         {...image.attributes}
         id={id}

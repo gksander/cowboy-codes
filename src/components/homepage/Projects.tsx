@@ -20,6 +20,7 @@ export function Projects({ projects }: { projects: Project[] }) {
             {project.image ? (
               <div className="relative rounded-lg mb-3 overflow-hidden">
                 <OptimizedImage
+                  ignoreAspectRatio
                   image={project.image}
                   alt={`${project.title} screenshot`}
                   class={clsx(
@@ -42,7 +43,7 @@ export function Projects({ projects }: { projects: Project[] }) {
               rel="noreferrer"
             >
               <span>{project.title}</span>
-              <FaGithub className="w-5 h-5 opacity-0 group-hover/link:opacity-100 transition-all duration-200 -translate-x-2 group-hover:translate-x-0 scale-75 group-hover:scale-100" />
+              <FaGithub className="w-5 h-5 opacity-0 group-hover/link:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 scale-75 group-hover:scale-100" />
             </a>
             <p className="text-sm text-gray-800 dark:text-gray-200">
               {project.description}{" "}

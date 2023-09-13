@@ -21,6 +21,7 @@ import Henri from "../assets/henri.png";
 import Artisan from "../assets/Artisan.png";
 import ASU from "../assets/asu.png";
 import groqd from "../assets/groqd-arcade.png";
+import vnxl from "../assets/vnxl.jpg";
 import Clips from "../assets/clips.png";
 import Mandelbruh from "../assets/mandelbruh.png";
 import Zephyr from "../assets/zephyr.png";
@@ -127,6 +128,18 @@ const educationItems: EducationItem[] = await Promise.all(
 
 const projects: Project[] = await Promise.all(
   [
+    {
+      title: "Victory Native",
+      repoUrl: "https://github.com/FormidableLabs/victory-native-xl/",
+      description:
+        "High-performance charting library for React Native powered by Reanimated, Skia, Gesture Handler, and D3.",
+      image: vnxl,
+      // imageFit: "contain" as const,
+      link: {
+        href: "https://formidable.com/open-source/victory-native/",
+        title: "Check it out",
+      },
+    },
     {
       title: "Groqd",
       repoUrl: "https://github.com/FormidableLabs/groqd/",

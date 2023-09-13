@@ -1,0 +1,37 @@
+---
+title: "Big O is a Tool, Not a Rule"
+description: "TODO"
+keywords:
+  - TODO
+hasMath: true
+pubDate: "Sept 10 2023"
+draft: true
+---
+
+I recently saw a piece of writing that effectively argued "In software, you should optimize for Big-O out of the gate because _performance matter_ and it's best to build a habit of writing optimizing Big-O in your algorithms."
+
+I've been reflecting on that idea and how I believe the following:
+
+> When it comes to algorithms, it is performance-ignorant to focus solely on Big-O.
+
+After all, Big-O is a **tool, not a rule**.
+
+## What is "Big O"?
+
+"Big O notation" is a mathematical tool generally used to describe the _limiting_ time/space complexity of an algorithm as the input size increases without bound.
+
+> As a simple example, if an algorithm is marked as $O(n^2)$ time complexity it simply means that as the input size $n$ gets increasingly large, the algorithm requires **roughly** $n^2$ operations to complete.
+
+In mathematical terms we might say that an algorithm $f$ has $O(n^2)$ time complexity if $\text{ops}(f(n))$ represents the number of operations required for $f(n)$ to complete and:
+
+$$
+\lim_{n \rightarrow \infty} \text{ops}(f(n)) = n^2
+$$
+
+If we want to get even _more_ pedantic, this means that for each $\epsilon > 0$ there exists some integer $N$ such that for $n \gt N$ we have
+
+$$
+|\text{ops}(f(n)) - n^2| \lt \epsilon
+$$
+
+This is a calculus-flavor of describing limits and Big O, but it illustrates an important point: when it comes to limiting behavior
