@@ -14,7 +14,7 @@ export function Definition({ term, children, source }: DefinitionProps) {
   return (
     <div class="p-3 -ml-3 bg-gradient-to-tl from-gray-100 dark:from-gray-700 dark:to-30% via-transparent to-transparent rounded overflow-hidden not-prose flex flex-col gap-y-2">
       <div class="flex items-center justify-between text-sm">
-        <span class="font-bold text-gray-300">{term}</span>
+        <span class="font-bold text-gray-600 dark:text-gray-300">{term}</span>
         {source && (
           <a
             href={source.url}
