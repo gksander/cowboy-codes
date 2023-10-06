@@ -1,0 +1,78 @@
+---
+title: "WebStorm and Vim: The Best of Both Worlds"
+description: "TODO..."
+keywords:
+  - JetBrains
+  - WebStorm
+pubDate: "Oct 05 2023"
+---
+
+## Why JetBrains?
+
+I work primarily in the JavaScript/TypeScript space. I use WebStorm (by JetBrains) as my primary editor/IDE, and am quite fond of vim as a concept. Most of my colleagues use VS Code; some of them use neovim. Both groups often ask me questions like, "why would you use WebStorm? It's not free." I feel like I've been asked this enough times to write down my thoughts on the topic.
+
+### It's cheap
+
+Before you get your panties in a bunch and say, "but WebStorm costs \$159 per year!", think about your hourly rate – and how many hours you'd have to save to pay that \$159 off. It's likely no more than three if you're a software engineer.
+
+It's not free, but it's not expensive – and if the return on investment is high for the tool, you shouldn't even really bat an eye at that price tag. Also, your employer will almost certainly pay for a license for you.
+
+### Refactoring Support
+
+Perhaps the biggest reason I use WebStorm: the refactoring support. [The list of refactoring actions](https://www.jetbrains.com/help/webstorm/refactoring-source-code.html#ws_supported_refactorings) in WebStorm is too large for me to list out here, but the tl;dr is: it can do _a lot_. Here are a few things that get me excited about it:
+
+- The ability to drag a file in the project explorer and have WebStorm automatically update `import` statements accordingly.
+- The ability to move one or multiple symbols from one file to another and have WebStorm update `import` statements accordingly.
+- The ability to rename a file, have WebStorm ask if you want to rename the primary export accordingly – and then have WebStorm update `import` statements accordingly.
+- The ability to "safe delete" a symbol and have WebStorm let you know if that symbol is being referenced.
+
+All of these, plus more, make for an incredible development experience – especially in larger TypeScript codebases!
+
+TODO: GIF of this in action?
+
+### Intellisense
+
+TODO:
+
+### Git integration
+
+Most IDEs have some sort of git integration. I find WebStorm's quite nice: it can do your standard git actions, like stage files, make commits, push/pull from remotes, and so on.
+
+However, the merge conflict editor in WebStorm is leagues beyond any other that I've tried. It's got a 3-way merge editor that allows you to easily grab bits and pieces from incoming/current branches and easily edit the output manually if needed. Here's a screenshot of the glory.
+
+TODO: screenshot of this
+
+Honestly, this feature alone saves me hours of time a month when working with a team where merge conflicts are a regular occurence. This is worth the \$159 in my opinion.
+
+### IdeaVim
+
+TODO:
+
+## Why Vim
+
+TODO:
+
+### Makes you faster
+
+TODO:
+
+### Less time fiddling your mouse
+
+TODO:
+
+## IdeaVim: the best of both worlds
+
+TODO: vim key motions and a good set of plugins, vim remaps that tap into IDE actions
+
+## My setup
+
+TODO:
+
+- Baseline config
+  - AceJump, a big one
+  - Formatting and import optimizing
+  - Code actions
+  - Window splitting and moving
+  - Brace matching
+  - Line joining?
+  - Anything else in there?
