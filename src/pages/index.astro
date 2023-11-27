@@ -14,6 +14,7 @@ import type { IExperience } from "../components/homepage/BackgroundAndExperience
 import { ImageMetadata } from "astro";
 import type { EducationItem } from "../components/homepage/BackgroundAndExperience";
 
+import RampIcon from "../assets/ramp-icon.png";
 import FormidableIcon from "../assets/Formidable-Icon.png";
 import Coinbase from "../assets/coinbase-icon.png";
 import Synapse from "../assets/synapse.png";
@@ -39,10 +40,17 @@ const experiences = await Promise.all(
   (
     [
       {
+        title: "Sr. Software Engineer",
+        company: "Ramp",
+        description: `Full-stack web development using React and Python. Leading initiatives to streamline cardholder and admin workflows.`,
+        time: "Oct. 2023 &ndash; Present",
+        logo: RampIcon,
+      },
+      {
         title: "VP of Engineering",
         company: "Formidable",
         description: `Helping client engineering teams shine their brightest. Overseeing the development of open source software and community outreach.`,
-        time: "June 2022 &ndash; current",
+        time: "June 2022 &ndash; Oct 2023",
         logo: FormidableIcon,
       },
       {
